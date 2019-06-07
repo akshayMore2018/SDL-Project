@@ -2,17 +2,16 @@
 #include "Actor.h"
 #include "SDL_image.h"
 #include <iostream>
+#include "SpriteComponent.h"
+#include "BGSpriteComponent.h"
 
-Game::Game():m_Window(nullptr),m_IsRunning(true),frameStart(0),frameTime(0)
+Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
 }
 
 Game::~Game()
 {
-	while (!this->m_Actors.empty())
-	{
-		delete this->m_Actors.back();
-	}
+	
 }
 
 bool Game::initialize()
@@ -20,7 +19,7 @@ bool Game::initialize()
 	if (SDL_Init(SDL_INIT_VIDEO)==0)
 	{
 		this->m_Window = SDL_CreateWindow(
-			"OstenGate",
+			"StarHopper",
 			100,
 			100,
 			1024,
@@ -46,7 +45,8 @@ bool Game::initialize()
 			SDL_Log("Failed to initialize SDL_image :%s", IMG_GetError());
 			system("pause");
 		}
-
+		this->loadData();
+		mTicksCount = SDL_GetTicks();
 		return true;
 	}
 	SDL_Log("SDL initialization failed :%s", SDL_GetError);
@@ -65,6 +65,8 @@ void Game::run()
 
 void Game::stop()
 {
+	this->unloadData();
+	IMG_Quit();
 	SDL_DestroyRenderer(this->m_Renderer);
 	SDL_DestroyWindow(this->m_Window);
 	SDL_Quit();
@@ -80,6 +82,118 @@ void Game::addActor(Actor * actor)
 	{
 		this->m_Actors.emplace_back(actor);
 	}
+}
+
+void Game::removeActor(Actor * actor)
+{
+	auto iter = std::find(this->m_PendingActors.begin(), this->m_PendingActors.end(), actor);
+	if (iter != this->m_PendingActors.end())
+	{
+		std::iter_swap(iter, this->m_PendingActors.end() - 1);
+		this->m_PendingActors.pop_back();
+	}
+
+	iter = std::find(this->m_Actors.begin(), this->m_Actors.end(), actor);
+	if (iter != this->m_Actors.end())
+	{
+		std::iter_swap(iter, this->m_Actors.end() - 1);
+		this->m_Actors.pop_back();
+	}
+
+}
+
+void Game::addSprite(SpriteComponent * sprite)
+{
+	int drawOrder = sprite->getDrawOrder();
+
+	auto iter = this->m_Sprites.begin();
+	for (;iter != this->m_Sprites.end(); iter++)
+	{
+		if (drawOrder < (*iter)->getDrawOrder())
+		{
+			break;
+		}
+	}
+	this->m_Sprites.insert(iter, sprite);
+}
+
+void Game::removeSprite(SpriteComponent * sprite)
+{
+	auto iter = std::find(this->m_Sprites.begin(), this->m_Sprites.end(), sprite);
+	this->m_Sprites.erase(iter);
+}
+
+SDL_Texture * Game::getTexture(const std::string & filename)
+{
+	SDL_Texture* texture = nullptr;
+	auto iter = this->m_Textures.find(filename);
+
+	if (iter != this->m_Textures.end())
+	{
+		texture = iter->second;
+	}
+	else
+	{
+		SDL_Surface* surf = IMG_Load(filename.c_str());
+
+		if (!surf)
+		{
+			SDL_Log("Failed to load texture file : %s", filename.c_str());
+			return nullptr;
+		}
+
+		texture = SDL_CreateTextureFromSurface(this->m_Renderer, surf);
+		SDL_FreeSurface(surf);
+
+		if (!texture)
+		{
+			SDL_Log("failed to convert surface to texture for %s", filename.c_str());
+			return nullptr;
+		}
+
+		this->m_Textures.emplace(filename.c_str(), texture);
+
+	}
+
+	return texture;
+}
+
+void Game::loadData()
+{
+	Actor* temp = new Actor(this);
+	temp->setPosition(Vector2(512.0f, 384.0f));
+	// Create the "far back" background
+	BGSpriteComponent* bg = new BGSpriteComponent(temp);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	std::vector<SDL_Texture*> bgtexs = {
+		getTexture("Assets/Farback01.png"),
+		getTexture("Assets/Farback02.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(-100.0f);
+	// Create the closer background
+	bg = new BGSpriteComponent(temp, 50);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	bgtexs = {
+		getTexture("Assets/Stars.png"),
+		getTexture("Assets/Stars.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(-200.0f);
+}
+
+void Game::unloadData()
+{
+	while (!this->m_Actors.empty())
+	{
+		delete this->m_Actors.back();
+	}
+
+	for (auto i : this->m_Textures)
+	{
+		SDL_DestroyTexture(i.second);
+	}
+	this->m_Textures.clear();
 }
 
 void Game::events()
@@ -105,13 +219,20 @@ void Game::events()
 
 void Game::update()
 {
-	frameStart = SDL_GetTicks();
-	// update game
+	while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16))
+		;
+
+	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
+	if (deltaTime > 0.05f)
+	{
+		deltaTime = 0.05f;
+	}
+	mTicksCount = SDL_GetTicks();
 
 	this->m_UpdatingActors = true;
 	for (auto actor : this->m_Actors)
 	{
-		actor->update(frameTime);
+		actor->update(deltaTime);
 	}
 	this->m_UpdatingActors = false;
 
@@ -137,18 +258,18 @@ void Game::update()
 		delete actor;
 	}
 
-	frameTime = SDL_GetTicks() - frameStart;
 
-	if (frameDelay > frameTime)
-	{
-		SDL_Delay(frameDelay - frameTime);
-	}
 }
 
 void Game::render()
 {
 	SDL_SetRenderDrawColor(this->m_Renderer,32, 32, 32, 255);
 	SDL_RenderClear(this->m_Renderer);
+	for (auto sprite : m_Sprites)
+	{
+		sprite->draw(m_Renderer);
+	}
+	
 
 	SDL_RenderPresent(this->m_Renderer);
 }

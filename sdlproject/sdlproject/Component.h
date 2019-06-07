@@ -10,7 +10,7 @@ public:
 
 	inline int getUpdateOrder()const;
 
-private:
+protected:
 	Actor* m_Owner;
 	int m_UpdateOrder;
 };
