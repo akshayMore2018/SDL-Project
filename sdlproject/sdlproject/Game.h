@@ -17,10 +17,10 @@ public:
 	void removeSprite(class SpriteComponent* sprite);
 	void addActor(class Actor* actor);
 	void removeActor(class Actor* actor);
-
+	SDL_Texture* getTexture(const std::string& filename);
 private:
 
-	SDL_Texture* getTexture(const std::string& filename);
+	
 
 	void loadData();
 	void unloadData();

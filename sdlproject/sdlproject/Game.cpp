@@ -4,6 +4,7 @@
 #include <iostream>
 #include "SpriteComponent.h"
 #include "BGSpriteComponent.h"
+#include "AnimSpriteComponent.h"
 
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
@@ -162,24 +163,12 @@ void Game::loadData()
 {
 	Actor* temp = new Actor(this);
 	temp->setPosition(Vector2(512.0f, 384.0f));
-	// Create the "far back" background
-	BGSpriteComponent* bg = new BGSpriteComponent(temp);
-	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
-	std::vector<SDL_Texture*> bgtexs = {
-		getTexture("Assets/Farback01.png"),
-		getTexture("Assets/Farback02.png")
-	};
-	bg->SetBGTextures(bgtexs);
-	bg->SetScrollSpeed(-100.0f);
-	// Create the closer background
-	bg = new BGSpriteComponent(temp, 50);
-	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
-	bgtexs = {
-		getTexture("Assets/Stars.png"),
-		getTexture("Assets/Stars.png")
-	};
-	bg->SetBGTextures(bgtexs);
-	bg->SetScrollSpeed(-200.0f);
+	temp->setScale(3);
+	AnimSpriteComponent* sprite = new AnimSpriteComponent(temp);
+	sprite->addAnimation("run","Assets/playerAnimSheets/run0.png", 0, 0, 50, 37, 10, 6);
+	sprite->addAnimation("attack", "Assets/playerAnimSheets/attack0.png", 0, 0, 50, 37, 10, 4);
+	sprite->addAnimation("idle", "Assets/playerAnimSheets/idle0.png", 0, 0, 50, 37, 5, 3);
+	sprite->setAnimation("attack", -1);
 }
 
 void Game::unloadData()
