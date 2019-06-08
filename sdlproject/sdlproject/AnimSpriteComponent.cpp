@@ -6,27 +6,47 @@ AnimSpriteComponent::AnimSpriteComponent(Actor * owner, int draworder)
 	mCurrFrame(0),
 	mFrameRate(0),
 	mTotalFrames(0),
+	mTotalCycles(-1),
+	mCurrentCycle(0),
 	srcRect{0,0,0,0},
 	dstRect{0,0,0,0},
 	center{0,0}
 {
 }
 
+AnimSpriteComponent::~AnimSpriteComponent()
+{
+	for (auto i : this->animDataSet)
+	{
+		delete i.second;
+	}
+	this->animDataSet.clear();
+}
+
 void AnimSpriteComponent::update(float deltaTime)
 {
 	SpriteComponent::update(deltaTime);
+
+	if (this->animComplete)
+		return;
 
 	if (this->m_Texture)
 	{
 		this->mCurrFrame += this->mFrameRate * deltaTime;
 
-		while (this->mCurrFrame > this->mTotalFrames)
+		if (this->mCurrFrame > this->mTotalFrames)
 		{
+			
 			this->mCurrFrame -= this->mTotalFrames;
+			mCurrentCycle++;
 		}
-
+		if (mCurrentCycle == mTotalCycles)
+		{
+			mCurrFrame = this->mTotalFrames - 1;
+			this->animComplete = true;
+			this->m_Owner->onAnimCompleteEvent(this->currentAnimID);
+		}
 		srcRect.x = (int)mCurrFrame*this->srcRect.w;
-
 	}
 }
 
@@ -34,6 +54,10 @@ void AnimSpriteComponent::draw(SDL_Renderer * renderer)
 {
 	if (this->m_Texture)
 	{
+
+		this->dstRect.x = this->m_Owner->getPosition().x - this->dstRect.w / 2;
+		this->dstRect.y = this->m_Owner->getPosition().y - this->dstRect.h / 2;
+
 		SDL_RenderCopyEx(
 			renderer,
 			this->m_Texture,
@@ -55,6 +79,11 @@ void AnimSpriteComponent::setAnimation(const std::string & ID, int loop)
 	this->mTotalFrames = data->frameCount;
 	this->mFrameRate = data->frameRate;
 	this->setTextureRect(data->x, data->y, data->frameWidth, data->frameHeight);
+	this->mTotalCycles = loop;
+	this->currentAnimID = ID;
+	this->animComplete = false;
+	this->mCurrentCycle = 0;
+	this->mCurrFrame = 0;
 }
 
 
@@ -72,7 +101,6 @@ void AnimSpriteComponent::setTextureRect(float x, float y, float w, float h)
 
 	this->dstRect.w = this->srcRect.w*this->m_Owner->getScale();
 	this->dstRect.h = this->srcRect.h*this->m_Owner->getScale();
-
 	this->dstRect.x = this->m_Owner->getPosition().x - this->dstRect.w / 2;
 	this->dstRect.y = this->m_Owner->getPosition().y - this->dstRect.h / 2;
 

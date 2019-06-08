@@ -7,6 +7,7 @@ class AnimSpriteComponent : public SpriteComponent
 {
 public:
 	AnimSpriteComponent(class Actor* owner, int draworder = 100);
+	~AnimSpriteComponent();
 	void update(float deltaTime);
 	void draw(SDL_Renderer* renderer);
 	void setAnimation(const std::string& ID,int loop);
@@ -16,10 +17,14 @@ private:
 	float mCurrFrame;
 	float mFrameRate;
 	int mTotalFrames;
+	int mTotalCycles;
+	int mCurrentCycle;
 	SDL_Rect srcRect;
 	SDL_Rect dstRect;
 	SDL_Point center;
 	std::map<std::string, class AnimationData*> animDataSet;
+	std::string currentAnimID;
+	bool animComplete;
 };
 
 class AnimationData

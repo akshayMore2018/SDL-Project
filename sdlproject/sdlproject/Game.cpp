@@ -5,7 +5,7 @@
 #include "SpriteComponent.h"
 #include "BGSpriteComponent.h"
 #include "AnimSpriteComponent.h"
-
+#include "Player.h"
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
 }
@@ -161,14 +161,8 @@ SDL_Texture * Game::getTexture(const std::string & filename)
 
 void Game::loadData()
 {
-	Actor* temp = new Actor(this);
-	temp->setPosition(Vector2(512.0f, 384.0f));
-	temp->setScale(3);
-	AnimSpriteComponent* sprite = new AnimSpriteComponent(temp);
-	sprite->addAnimation("run","Assets/playerAnimSheets/run0.png", 0, 0, 50, 37, 10, 6);
-	sprite->addAnimation("attack", "Assets/playerAnimSheets/attack0.png", 0, 0, 50, 37, 10, 4);
-	sprite->addAnimation("idle", "Assets/playerAnimSheets/idle0.png", 0, 0, 50, 37, 5, 3);
-	sprite->setAnimation("attack", -1);
+	Player* player = new Player(this);
+	player->init();
 }
 
 void Game::unloadData()
@@ -252,7 +246,7 @@ void Game::update()
 
 void Game::render()
 {
-	SDL_SetRenderDrawColor(this->m_Renderer,32, 32, 32, 255);
+	SDL_SetRenderDrawColor(this->m_Renderer,12, 32, 32, 255);
 	SDL_RenderClear(this->m_Renderer);
 	for (auto sprite : m_Sprites)
 	{

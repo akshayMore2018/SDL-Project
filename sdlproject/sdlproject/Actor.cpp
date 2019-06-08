@@ -40,6 +40,10 @@ void Actor::updateActor(float deltaTime)
 {
 }
 
+void Actor::onAnimCompleteEvent(const std::string & animName)
+{
+}
+
 void Actor::addComponent(Component * component)
 {
 	int myOrder = component->getUpdateOrder();

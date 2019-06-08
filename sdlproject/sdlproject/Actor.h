@@ -18,6 +18,7 @@ public:
 	void update(float deltaTime);
 	void updateComponent(float deltaTime);
 	virtual void updateActor(float deltaTime);
+	virtual void onAnimCompleteEvent(const std::string& animName);
 
 	void addComponent(class Component* component);
 	void removeComponent(class Component* component);
@@ -26,7 +27,7 @@ public:
 	float getScale()const;
 	float getRotation()const;
 	class Game* getGame();
-
+	
 	void setPosition(const Vector2& position) { this->m_Position = position; }
 	void setScale(float scale) { this->m_Scale = scale; }
 	void setRotation(float rotation) { this->m_Rotation = rotation; }
@@ -68,3 +69,5 @@ inline Game * Actor::getGame()
 {
 	return this->m_Game;
 }
+
+
