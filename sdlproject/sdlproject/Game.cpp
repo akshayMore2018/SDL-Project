@@ -198,6 +198,13 @@ void Game::events()
 	{
 		this->m_IsRunning = false;
 	}
+
+	this->m_UpdatingActors = true;
+	for (auto actor : this->m_Actors)
+	{
+		actor->processInput(state);
+	}
+	this->m_UpdatingActors = false;
 }
 
 void Game::update()

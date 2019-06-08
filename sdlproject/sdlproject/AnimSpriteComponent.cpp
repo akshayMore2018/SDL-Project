@@ -65,7 +65,7 @@ void AnimSpriteComponent::draw(SDL_Renderer * renderer)
 			&dstRect,
 			this->m_Owner->getRotation()*(180/3.1451),
 			&center,
-			SDL_FLIP_NONE
+			this->m_Owner->flipStateX
 			);
 		
 			

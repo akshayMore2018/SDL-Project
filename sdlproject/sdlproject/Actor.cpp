@@ -3,7 +3,7 @@
 #include "Component.h"
 Actor::Actor(Game * game)
 	:m_State(EActive),m_Position(Vector2(0,0)),m_Scale(1.0f),m_Rotation(0.0f)
-	,m_Game(game)
+	,m_Game(game), flipStateX(SDL_RendererFlip::SDL_FLIP_NONE)
 {
 	this->m_Game->addActor(this);
 }
@@ -44,6 +44,23 @@ void Actor::onAnimCompleteEvent(const std::string & animName)
 {
 }
 
+void Actor::actorInput(const uint8_t * keystate)
+{
+}
+
+void Actor::processInput(const uint8_t * keystate)
+{
+	if (this->m_State == EActive)
+	{
+		for (auto comp : this->m_Components)
+		{
+			comp->processInput(keystate);
+		}
+		actorInput(keystate);
+
+	}
+}
+
 void Actor::addComponent(Component * component)
 {
 	int myOrder = component->getUpdateOrder();
@@ -68,5 +85,3 @@ void Actor::removeComponent(Component * component)
 		m_Components.erase(iter);
 	}
 }
-
-

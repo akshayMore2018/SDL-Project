@@ -19,7 +19,8 @@ public:
 	void updateComponent(float deltaTime);
 	virtual void updateActor(float deltaTime);
 	virtual void onAnimCompleteEvent(const std::string& animName);
-
+	virtual void actorInput(const uint8_t* keystate);
+	void processInput(const uint8_t* keystate);
 	void addComponent(class Component* component);
 	void removeComponent(class Component* component);
 	State getState()const;
@@ -33,8 +34,7 @@ public:
 	void setRotation(float rotation) { this->m_Rotation = rotation; }
 
 	void setState(State state) { this->m_State = state; }
-
-
+	SDL_RendererFlip flipStateX;
 
 private:
 	State m_State;
@@ -43,6 +43,7 @@ private:
 	float m_Rotation;
 	std::vector<class Component*> m_Components;
 	class Game* m_Game;
+	
 };
 inline Actor::State Actor::getState() const
 {
@@ -69,5 +70,6 @@ inline Game * Actor::getGame()
 {
 	return this->m_Game;
 }
+
 
 

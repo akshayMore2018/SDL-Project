@@ -10,7 +10,11 @@ public:
 
 	void updateActor(float deltaTime);
 	void onAnimCompleteEvent(const std::string & animName);
+	void actorInput(const uint8_t * keystate);
+
 private:
 	float mSpeed;
 	class AnimSpriteComponent* sprite;
+	bool mRunning;
+	bool mAttacking;
 };

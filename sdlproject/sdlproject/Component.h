@@ -1,5 +1,4 @@
 #pragma once
-
 class Component
 {
 public:
@@ -7,7 +6,7 @@ public:
 	virtual ~Component();
 
 	virtual void update(float deltaTime);
-
+	virtual void processInput(const unsigned __int8 * keystate);
 	inline int getUpdateOrder()const;
 
 protected:

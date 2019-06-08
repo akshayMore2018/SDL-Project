@@ -23,8 +23,11 @@ private:
 	SDL_Rect dstRect;
 	SDL_Point center;
 	std::map<std::string, class AnimationData*> animDataSet;
-	std::string currentAnimID;
+	
+public:
 	bool animComplete;
+	std::string currentAnimID;
+	
 };
 
 class AnimationData
