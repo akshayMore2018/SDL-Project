@@ -13,8 +13,19 @@ public:
 	void actorInput(const uint8_t * keystate);
 
 private:
-	float mSpeed;
 	class AnimSpriteComponent* sprite;
-	bool mRunning;
-	bool mAttacking;
+	
+	float xsp;
+	float ysp;
+	float gsp;
+	float angle;
+	const float acc;
+	const float dec;
+	const float frc;
+	const float top;
+
+	bool leftPressed;
+	bool rightPressed;
+	int facingDirection;
+	int movingDirection;
 };

@@ -5,6 +5,7 @@ AnimSpriteComponent::AnimSpriteComponent(Actor * owner, int draworder)
 	:SpriteComponent(owner,draworder),
 	mCurrFrame(0),
 	mFrameRate(0),
+	initialFrameRate(0),
 	mTotalFrames(0),
 	mTotalCycles(-1),
 	mCurrentCycle(0),
@@ -84,12 +85,18 @@ void AnimSpriteComponent::setAnimation(const std::string & ID, int loop)
 	this->animComplete = false;
 	this->mCurrentCycle = 0;
 	this->mCurrFrame = 0;
+	this->initialFrameRate = this->mFrameRate;
 }
 
 
 void AnimSpriteComponent::addAnimation(const std::string & ID,const std::string & filename, float frameX, float frameY, float frameWidth, float frameHeight, float frameRate, float frameCount)
 {
 	animDataSet[ID] = new AnimationData(filename, frameX, frameY, frameWidth, frameHeight, frameRate, frameCount);
+}
+
+void AnimSpriteComponent::setFrameRate(float rate)
+{
+	this->mFrameRate = rate;
 }
 
 void AnimSpriteComponent::setTextureRect(float x, float y, float w, float h)

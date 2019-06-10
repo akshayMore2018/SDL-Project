@@ -12,6 +12,8 @@ public:
 	void draw(SDL_Renderer* renderer);
 	void setAnimation(const std::string& ID,int loop);
 	void addAnimation(const std::string& ID, const std::string & filename, float frameX, float frameY, float frameWidth, float frameHeight, float frameRate, float frameCount);
+	void setFrameRate(float rate);
+	float getOriginalFrameRate()const { return initialFrameRate; }
 private:
 	void setTextureRect(float x, float y, float w, float h);
 	float mCurrFrame;
@@ -23,6 +25,7 @@ private:
 	SDL_Rect dstRect;
 	SDL_Point center;
 	std::map<std::string, class AnimationData*> animDataSet;
+	float initialFrameRate;
 	
 public:
 	bool animComplete;
