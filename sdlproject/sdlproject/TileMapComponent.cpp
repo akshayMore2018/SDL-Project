@@ -2,6 +2,9 @@
 #include "Actor.h"
 #include "Game.h"
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 TileMapComponent::TileMapComponent(Actor * owner, int draworder)
 	:SpriteComponent(owner,draworder), tileWidth(16),tileHeight(16)
 {
@@ -23,25 +26,32 @@ void TileMapComponent::loadMap(const std::string & mapFile, const std::string& t
 
 	horTileCount = m_TextureWidth / tileWidth;
 	verTileCount = m_TextureHeight / tileHeight;
-
-	this->tiles.push_back(new Tile(200, 18, 33, this));
-	this->tiles.push_back(new Tile(201, 19, 33, this));
-	
-	this->tiles.push_back(new Tile(220, 18, 34, this));
-	this->tiles.push_back(new Tile(221, 19, 34, this));
-
-	this->tiles.push_back(new Tile(200, 20, 33, this));
-	this->tiles.push_back(new Tile(201, 21, 33, this));
-	
-	this->tiles.push_back(new Tile(220, 20, 34, this));
-	this->tiles.push_back(new Tile(221, 21, 34, this));
-
-	this->tiles.push_back(new Tile(200, 22, 33, this));
-	this->tiles.push_back(new Tile(201, 23, 33, this));
-	
-	this->tiles.push_back(new Tile(220, 22, 34, this));
-	this->tiles.push_back(new Tile(221, 23, 34, this));
-
+	std::ifstream file(mapFile.c_str());
+	std::vector<int> cells;
+	if (file.is_open())
+	{
+		std::string line;
+		std::stringstream ss;
+		int r=0, c=0;
+		while(std::getline(file, line))
+		{ 
+			ss.str(line);
+			int i;
+			while (ss >> i)
+			{
+				
+				cells.push_back(i);
+				//due to incorrect tile rendering order , passing r into column argument and vice versa.
+				this->tiles.push_back(new Tile(i, c, r, this));
+				c++;
+				if (ss.peek() == ',')
+					ss.ignore();
+			}
+			ss.clear();
+			r++;
+			c = 0;
+		}
+	}
 }
 
 void TileMapComponent::draw(SDL_Renderer * renderer)
@@ -50,6 +60,8 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 	{
 		for (auto tile : tiles)
 		{
+			if (tile->ID == -1)
+				continue;
 			SDL_RenderCopyEx(
 				renderer,
 				this->m_Texture,

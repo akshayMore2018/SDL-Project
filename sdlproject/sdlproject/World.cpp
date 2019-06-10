@@ -9,6 +9,6 @@ World::World(Game * game)
 void World::init()
 {
 	map = new TileMapComponent(this);
-	map->loadMap("", "Assets/map/tileset.png");
+	map->loadMap("Assets/map/test.csv", "Assets/map/tileset.png");
 
 }
