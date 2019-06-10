@@ -6,6 +6,7 @@
 #include "BGSpriteComponent.h"
 #include "AnimSpriteComponent.h"
 #include "Player.h"
+#include "World.h"
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
 }
@@ -163,6 +164,9 @@ void Game::loadData()
 {
 	Player* player = new Player(this);
 	player->init();
+
+	World* world = new World(this);
+	world->init();
 }
 
 void Game::unloadData()
