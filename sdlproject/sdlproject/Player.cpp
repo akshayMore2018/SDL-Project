@@ -15,7 +15,7 @@ Player::Player(Game * game)
 void Player::init()
 {
 	this->setPosition(Vector2(512.0f, 384.0f));
-	this->setScale(3);
+	this->setScale(2);
 	sprite = new AnimSpriteComponent(this);
 	sprite->addAnimation("run", "Assets/playerAnimSheets/run0.png", 0, 0, 50, 37, 9, 6);
 	sprite->addAnimation("groundAttack01", "Assets/playerAnimSheets/groundAttack01.png", 0, 0, 50, 37, 7, 5);
