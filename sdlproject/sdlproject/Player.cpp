@@ -53,6 +53,9 @@ void Player::updateActor(float deltaTime)
 		if (collision)
 		{
 			std::cout << "collision occured" << std::endl;
+			isOnGround = true;
+			pos.y = obj->getTop() - ((getBottom() - getTop()) / 2)-ysp;
+			ysp = 0;
 		}
 
 	}
@@ -75,11 +78,24 @@ void Player::updateActor(float deltaTime)
 	if (gsp > top)
 		gsp = top;
 
-	xsp = gsp * cos(angle * M_PI/180);
-	ysp = gsp * (-sin(angle * M_PI / 180));
+	if (isOnGround)
+	{
+		xsp = gsp * cos(angle * M_PI / 180);
+		ysp = gsp * (-sin(angle * M_PI / 180));
+	}
+	else
+	{
+		xsp = gsp * cos(angle * M_PI / 180);
+		ysp += grv;
+		if (ysp > 16)
+		{
+			ysp = 16;
+		}
+		pos.y += ysp;
+	}
 
 	pos.x += xsp;
-	pos.y += ysp;
+	
 
 
 	if (pos.x > 1030)
@@ -161,6 +177,18 @@ void Player::actorInput(const uint8_t * keystate)
 		}
 		movingDirection = gsp / abs(gsp);
 	}
+
+	if (keystate[SDL_SCANCODE_SPACE])
+	{
+		if (isOnGround)
+		{
+			ysp = -jmp;
+			isOnGround = false;
+		}
+		
+	}
+
+
 	//animation speed according to the acceleration
 	sprite->setFrameRate(sprite->getOriginalFrameRate()+abs(gsp));
 	
