@@ -24,8 +24,14 @@ private:
 	const float frc;
 	const float top;
 
+	const float air; 
+	const float jmp; 
+	const float knxjmp;
+	const float	grv; 
+
 	bool leftPressed;
 	bool rightPressed;
 	int facingDirection;
 	int movingDirection;
+	bool isOnGround;
 };

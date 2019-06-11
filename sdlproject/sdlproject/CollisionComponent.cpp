@@ -3,7 +3,7 @@
 #include "Game.h"
 #include <iostream>
 CollisionComponent::CollisionComponent(Actor * owner, int updateOrder)
-:Component(owner,updateOrder), collisionRect{0,0,0,0}
+:Component(owner,updateOrder), collisionRect{0,0,0,0},left(0),right(0),top(0),bottom(0)
 {
 	this->m_Owner->getGame()->addCollider(this);
 }

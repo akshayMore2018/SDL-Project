@@ -4,7 +4,7 @@
 #include "CollisionComponent.h"
 Actor::Actor(Game * game)
 	:m_State(EActive),m_Position(Vector2(0,0)),m_Scale(1.0f),m_Rotation(0.0f)
-	,m_Game(game), flipStateX(SDL_RendererFlip::SDL_FLIP_NONE),collider(nullptr)
+	,m_Game(game), flipStateX(SDL_RendererFlip::SDL_FLIP_NONE)
 {
 	this->m_Game->addActor(this);
 }
@@ -89,8 +89,12 @@ void Actor::removeComponent(Component * component)
 }
 void Actor::updateObjectBounds()
 {
-	left = collider->getLeft();
-	right = collider->getRight();
-	top = collider->getTop();
-	bottom = collider->getBottom();
+	if (collider)
+	{
+		left = collider->getLeft();
+		right = collider->getRight();
+		top = collider->getTop();
+		bottom = collider->getBottom();
+	}
+	
 }

@@ -1,7 +1,6 @@
 #include "Tile.h"
 #include "SpriteComponent.h"
 #include "Game.h"
-#include "CollisionComponent.h"
 
 Tile::Tile(Game * game)
 	:Actor(game)

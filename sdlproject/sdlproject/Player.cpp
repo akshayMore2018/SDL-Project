@@ -8,8 +8,9 @@ Player::Player(Game * game)
 	:Actor(game),
 	xsp(0.0f),ysp(0.0f),gsp(0.0f),angle(0),
 	acc(0.046875),dec(0.5),frc(acc),top(6),
+	air(0.09375), jmp(6.5), knxjmp(6), grv(0.21875),
 	facingDirection(1),movingDirection(1),
-	leftPressed(false),rightPressed(false)
+	leftPressed(false),rightPressed(false),isOnGround(false)
 {
 
 }
@@ -31,6 +32,7 @@ void Player::init()
 
 void Player::updateActor(float deltaTime)
 {
+	Vector2 pos = this->getPosition();
 	updateObjectBounds();
 	for (auto obj : getGame()->getTiles())
 	{
@@ -68,7 +70,7 @@ void Player::updateActor(float deltaTime)
 		}
 	}
 	
-	Vector2 pos = this->getPosition();
+	
 
 	if (gsp > top)
 		gsp = top;
@@ -106,56 +108,47 @@ void Player::actorInput(const uint8_t * keystate)
 	rightPressed = false;
 	if (keystate[SDL_SCANCODE_LEFT])
 	{
+		leftPressed = true;
+
 		movingDirection = -1;
 		gsp += acc*movingDirection;
-		leftPressed = true;
 		if (gsp > 0)
 		{
 			gsp += dec* movingDirection;
-		}
-
-		if (this->sprite->currentAnimID != "run")
-		{
-			this->sprite->setAnimation("run", -1);
 		}
 		if (gsp < 0)
 		{
 			facingDirection = -1;
 			this->flipStateX = SDL_RendererFlip::SDL_FLIP_HORIZONTAL;
 		}
+
+		if (this->sprite->currentAnimID != "run")
+		{
+			this->sprite->setAnimation("run", -1);
+		}
 		
 		
 	}
 	else if(keystate[SDL_SCANCODE_RIGHT])
 	{
+		rightPressed = true;
+
 		movingDirection = 1;
 		gsp += acc*movingDirection;
-		rightPressed = true;
 		if (gsp < 0)
 		{
 			gsp += dec*movingDirection;
-		}
-		if (this->sprite->currentAnimID != "run")
-		{
-			this->sprite->setAnimation("run", -1);
 		}
 		if (gsp > 0)
 		{
 			facingDirection = 1;
 			this->flipStateX = SDL_RendererFlip::SDL_FLIP_NONE;
 		}
-	}
-	else if (keystate[SDL_SCANCODE_UP])
-	{
-		Vector2 pos = this->getPosition();
-		pos.y += -4;
-		this->setPosition(pos);
-	}
-	else if (keystate[SDL_SCANCODE_DOWN])
-	{
-		Vector2 pos = this->getPosition();
-		pos.y += 4;
-		this->setPosition(pos);
+
+		if (this->sprite->currentAnimID != "run")
+		{
+			this->sprite->setAnimation("run", -1);
+		}
 	}
 	else
 	{
@@ -166,6 +159,7 @@ void Player::actorInput(const uint8_t * keystate)
 				this->sprite->setAnimation("idle", -1);
 			}
 		}
+		movingDirection = gsp / abs(gsp);
 	}
 	//animation speed according to the acceleration
 	sprite->setFrameRate(sprite->getOriginalFrameRate()+abs(gsp));

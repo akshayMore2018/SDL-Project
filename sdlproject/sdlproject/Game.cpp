@@ -297,9 +297,13 @@ void Game::render()
 		sprite->draw(m_Renderer);
 	}
 	SDL_SetRenderDrawColor(this->m_Renderer, 255, 0, 0, 255);
-	for (auto collider : m_Colliders)
+	for (auto actor : m_Actors)
 	{
-		collider->draw(m_Renderer);
+		if (actor->getCollider())
+		{
+			SDL_RenderDrawRect(m_Renderer,&actor->getCollider()->getRect());
+		}
+		
 	}
 
 	SDL_RenderPresent(this->m_Renderer);

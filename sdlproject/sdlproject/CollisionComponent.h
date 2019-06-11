@@ -11,7 +11,7 @@ public:
 	void updateObjectBounds();
 	
 	void setRectLocal(float x, float y, float width, float height);
-	const SDL_Rect& getCollisionRect() { return collisionRect; }
+	const SDL_Rect& getRect() { return collisionRect; }
 	const float getLeft()const { return left; }
 	const float getRight()const { return right; }
 	const float getTop()const { return top; }
