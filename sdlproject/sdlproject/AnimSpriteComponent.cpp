@@ -68,7 +68,6 @@ void AnimSpriteComponent::draw(SDL_Renderer * renderer)
 			&center,
 			this->m_Owner->flipStateX
 			);
-		
 			
 	}
 }

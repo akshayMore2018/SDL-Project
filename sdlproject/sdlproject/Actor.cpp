@@ -1,9 +1,10 @@
 #include "Actor.h"
 #include "Game.h"
 #include "Component.h"
+#include "CollisionComponent.h"
 Actor::Actor(Game * game)
 	:m_State(EActive),m_Position(Vector2(0,0)),m_Scale(1.0f),m_Rotation(0.0f)
-	,m_Game(game), flipStateX(SDL_RendererFlip::SDL_FLIP_NONE)
+	,m_Game(game), flipStateX(SDL_RendererFlip::SDL_FLIP_NONE),collider(nullptr)
 {
 	this->m_Game->addActor(this);
 }
@@ -38,6 +39,7 @@ void Actor::updateComponent(float deltaTime)
 
 void Actor::updateActor(float deltaTime)
 {
+	updateObjectBounds();
 }
 
 void Actor::onAnimCompleteEvent(const std::string & animName)
@@ -84,4 +86,11 @@ void Actor::removeComponent(Component * component)
 	{
 		m_Components.erase(iter);
 	}
+}
+void Actor::updateObjectBounds()
+{
+	left = collider->getLeft();
+	right = collider->getRight();
+	top = collider->getTop();
+	bottom = collider->getBottom();
 }

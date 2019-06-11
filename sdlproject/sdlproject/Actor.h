@@ -32,9 +32,15 @@ public:
 	void setPosition(const Vector2& position) { this->m_Position = position; }
 	void setScale(float scale) { this->m_Scale = scale; }
 	void setRotation(float rotation) { this->m_Rotation = rotation; }
-
 	void setState(State state) { this->m_State = state; }
 	SDL_RendererFlip flipStateX;
+
+	const float getLeft() const { return left; }
+	const float getRight() const { return right; }
+	const float getTop() const { return top; }
+	const float getBottom() const { return bottom; }
+	void updateObjectBounds();
+	class CollisionComponent* collider;
 
 private:
 	State m_State;
@@ -43,7 +49,7 @@ private:
 	float m_Rotation;
 	std::vector<class Component*> m_Components;
 	class Game* m_Game;
-	
+	float left, right, top, bottom;
 };
 inline Actor::State Actor::getState() const
 {
@@ -70,6 +76,7 @@ inline Game * Actor::getGame()
 {
 	return this->m_Game;
 }
+
 
 
 

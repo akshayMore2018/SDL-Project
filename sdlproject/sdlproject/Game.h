@@ -15,9 +15,17 @@ public:
 	void stop();
 	void addSprite(class SpriteComponent* sprite);
 	void removeSprite(class SpriteComponent* sprite);
+	
+	void addCollider(class CollisionComponent* collider);
+	void removeCollider(class CollisionComponent* collider);
+
 	void addActor(class Actor* actor);
 	void removeActor(class Actor* actor);
 	SDL_Texture* getTexture(const std::string& filename);
+
+	void addTile(class Tile* tile);
+	void removeTile(class Tile* tile);
+	std::vector<class Tile*>& getTiles() { return mTiles; }
 private:
 
 	
@@ -30,6 +38,7 @@ private:
 
 	std::unordered_map<std::string, SDL_Texture*> m_Textures;
 	std::vector<class SpriteComponent*> m_Sprites;
+	std::vector<class CollisionComponent*> m_Colliders;
 	
 	SDL_Window* m_Window;
 	SDL_Renderer* m_Renderer;
@@ -38,4 +47,5 @@ private:
 	bool m_UpdatingActors;
 	std::vector<Actor*> m_PendingActors;
 	std::vector<Actor*> m_Actors;
+	std::vector<class Tile*> mTiles;
 };

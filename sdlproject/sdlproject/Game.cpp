@@ -6,7 +6,8 @@
 #include "BGSpriteComponent.h"
 #include "AnimSpriteComponent.h"
 #include "Player.h"
-#include "World.h"
+#include "CollisionComponent.h"
+#include "Tile.h"
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
 }
@@ -125,6 +126,17 @@ void Game::removeSprite(SpriteComponent * sprite)
 	this->m_Sprites.erase(iter);
 }
 
+void Game::addCollider(CollisionComponent * collider)
+{
+	this->m_Colliders.push_back(collider);
+}
+
+void Game::removeCollider(CollisionComponent * collider)
+{
+	auto iter = std::find(this->m_Colliders.begin(), this->m_Colliders.end(), collider);
+	this->m_Colliders.erase(iter);
+}
+
 SDL_Texture * Game::getTexture(const std::string & filename)
 {
 	SDL_Texture* texture = nullptr;
@@ -160,13 +172,34 @@ SDL_Texture * Game::getTexture(const std::string & filename)
 	return texture;
 }
 
+void Game::addTile(Tile * tile)
+{
+	mTiles.emplace_back(tile);
+}
+
+void Game::removeTile(Tile * tile)
+{
+	auto iter = std::find(mTiles.begin(),
+		mTiles.end(), tile);
+	if (iter != mTiles.end())
+	{
+		mTiles.erase(iter);
+	}
+}
+
 void Game::loadData()
 {
 	Player* player = new Player(this);
 	player->init();
 
-	World* world = new World(this);
-	world->init();
+	
+	for (int i = 0; i < 16; i++)
+	{
+		Tile* tile = new Tile(this);
+		tile->setPosition(Vector2((i*64+32), 400.0f));
+		tile->init();
+	}
+
 }
 
 void Game::unloadData()
@@ -263,7 +296,11 @@ void Game::render()
 	{
 		sprite->draw(m_Renderer);
 	}
-	
+	SDL_SetRenderDrawColor(this->m_Renderer, 255, 0, 0, 255);
+	for (auto collider : m_Colliders)
+	{
+		collider->draw(m_Renderer);
+	}
 
 	SDL_RenderPresent(this->m_Renderer);
 }

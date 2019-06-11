@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Game.h"
 #include "AnimSpriteComponent.h"
+#include "CollisionComponent.h"
+#include "Tile.h"
 Player::Player(Game * game)
 	:Actor(game),
 	xsp(0.0f),ysp(0.0f),gsp(0.0f),angle(0),
@@ -14,20 +16,48 @@ Player::Player(Game * game)
 
 void Player::init()
 {
-	this->setPosition(Vector2(512.0f, 384.0f));
+	this->setPosition(Vector2(512.0f, 17*16));
 	this->setScale(2);
-	sprite = new AnimSpriteComponent(this);
+	sprite = new AnimSpriteComponent(this,101);
 	sprite->addAnimation("run", "Assets/playerAnimSheets/run0.png", 0, 0, 50, 37, 9, 6);
 	sprite->addAnimation("groundAttack01", "Assets/playerAnimSheets/groundAttack01.png", 0, 0, 50, 37, 7, 5);
 	sprite->addAnimation("idle", "Assets/playerAnimSheets/idle0.png", 0, 0, 50, 37, 5, 3);
 	sprite->setAnimation("idle", -1);
+
+	collider = new CollisionComponent(this);
+	collider->setRectLocal(0,5,45, 65);
+	updateObjectBounds();
 }
 
 void Player::updateActor(float deltaTime)
 {
+	updateObjectBounds();
+	for (auto obj : getGame()->getTiles())
+	{
+		bool x_overlaps = false;
+		bool y_overlaps = false;
+		bool collision = false;
+		if ((getLeft() < obj->getLeft()) && (getRight() > obj->getLeft()))
+		{
+			x_overlaps = true;
+		}
+		if ((getTop() < obj->getBottom()) && (getBottom() > obj->getTop()))
+		{
+			y_overlaps = true;
+		}
+		
+		collision = x_overlaps && y_overlaps;
+
+		if (collision)
+		{
+			std::cout << "collision occured" << std::endl;
+		}
+
+	}
+
+
 	if (!(leftPressed || rightPressed))
 	{
-		
 		if (abs(gsp) > frc)
 		{
 			gsp += frc * -movingDirection;
@@ -114,6 +144,18 @@ void Player::actorInput(const uint8_t * keystate)
 			facingDirection = 1;
 			this->flipStateX = SDL_RendererFlip::SDL_FLIP_NONE;
 		}
+	}
+	else if (keystate[SDL_SCANCODE_UP])
+	{
+		Vector2 pos = this->getPosition();
+		pos.y += -4;
+		this->setPosition(pos);
+	}
+	else if (keystate[SDL_SCANCODE_DOWN])
+	{
+		Vector2 pos = this->getPosition();
+		pos.y += 4;
+		this->setPosition(pos);
 	}
 	else
 	{
