@@ -19,6 +19,9 @@ public:
 	void addCollider(class CollisionComponent* collider);
 	void removeCollider(class CollisionComponent* collider);
 
+	void addRay(class RayComponent* ray);
+	void removeRay(class RayComponent* ray);
+
 	void addActor(class Actor* actor);
 	void removeActor(class Actor* actor);
 	SDL_Texture* getTexture(const std::string& filename);
@@ -39,7 +42,8 @@ private:
 	std::unordered_map<std::string, SDL_Texture*> m_Textures;
 	std::vector<class SpriteComponent*> m_Sprites;
 	std::vector<class CollisionComponent*> m_Colliders;
-	
+	std::vector<class RayComponent*> m_Rays;
+
 	SDL_Window* m_Window;
 	SDL_Renderer* m_Renderer;
 	bool m_IsRunning;

@@ -41,7 +41,6 @@ public:
 	const float getTop() const { return top; }
 	const float getBottom() const { return bottom; }
 	void updateObjectBounds();
-	CollisionComponent* getCollider()const { return collider; }
 protected:
 	class CollisionComponent* collider;
 

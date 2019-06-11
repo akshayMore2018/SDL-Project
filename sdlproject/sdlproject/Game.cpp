@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "CollisionComponent.h"
 #include "Tile.h"
+#include "RayComponent.h"
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
 }
@@ -135,6 +136,17 @@ void Game::removeCollider(CollisionComponent * collider)
 {
 	auto iter = std::find(this->m_Colliders.begin(), this->m_Colliders.end(), collider);
 	this->m_Colliders.erase(iter);
+}
+
+void Game::addRay(RayComponent* ray)
+{
+	this->m_Rays.push_back(ray);
+}
+
+void Game::removeRay(RayComponent * ray)
+{
+	auto iter = std::find(this->m_Rays.begin(), this->m_Rays.end(), ray);
+	this->m_Rays.erase(iter);
 }
 
 SDL_Texture * Game::getTexture(const std::string & filename)
@@ -297,13 +309,13 @@ void Game::render()
 		sprite->draw(m_Renderer);
 	}
 	SDL_SetRenderDrawColor(this->m_Renderer, 255, 0, 0, 255);
-	for (auto actor : m_Actors)
+	for (auto collider : m_Colliders)
 	{
-		if (actor->getCollider())
-		{
-			SDL_RenderDrawRect(m_Renderer,&actor->getCollider()->getRect());
-		}
-		
+		collider->draw(m_Renderer);
+	}
+	for (auto ray : m_Rays)
+	{
+		ray->draw(m_Renderer);
 	}
 
 	SDL_RenderPresent(this->m_Renderer);

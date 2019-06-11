@@ -1,6 +1,7 @@
 #include "AnimSpriteComponent.h"
 #include "Actor.h"
 #include "Game.h"
+
 AnimSpriteComponent::AnimSpriteComponent(Actor * owner, int draworder)
 	:SpriteComponent(owner,draworder),
 	mCurrFrame(0),
@@ -70,6 +71,7 @@ void AnimSpriteComponent::draw(SDL_Renderer * renderer)
 			);
 			
 	}
+
 }
 
 void AnimSpriteComponent::setAnimation(const std::string & ID, int loop)

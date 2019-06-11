@@ -3,7 +3,8 @@
 #include "Game.h"
 #include "AnimSpriteComponent.h"
 #include "CollisionComponent.h"
-#include "Tile.h"
+#include "Tile.h" 
+#include "RayComponent.h"
 Player::Player(Game * game)
 	:Actor(game),
 	xsp(0.0f),ysp(0.0f),gsp(0.0f),angle(0),
@@ -28,6 +29,9 @@ void Player::init()
 	collider = new CollisionComponent(this);
 	collider->setRectLocal(0,5,45, 65);
 	updateObjectBounds();
+
+	RayComponent* ray = new RayComponent(this);
+
 }
 
 void Player::updateActor(float deltaTime)
