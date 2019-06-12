@@ -45,6 +45,8 @@ public:
 	const float getBottom() const { return bottom; }
 	void updateObjectBounds();
 
+	virtual void rayCastResult(Vector2 position);
+
 	SDL_RendererFlip flipStateX;
 protected:
 	class CollisionComponent* collider;

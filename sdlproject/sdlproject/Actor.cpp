@@ -98,3 +98,7 @@ void Actor::updateObjectBounds()
 	}
 	
 }
+
+void Actor::rayCastResult(Vector2 position)
+{
+}

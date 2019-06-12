@@ -6,12 +6,12 @@ class World
 {
 public:
 	World(int w, int h,class Game* game);
-	class Tile* GetTile(int x, int y);
+	const class Tile* GetTile(int x, int y)const;
 	void init();
 
 private:
 	void addTile(int x, int y, class Tile* tile);
-
+	void setDimension(int w, int h);
 	class Game* mGame;
 	int w;
 	int h;

@@ -38,33 +38,6 @@ void Player::updateActor(float deltaTime)
 {
 	Vector2 pos = this->getPosition();
 	updateObjectBounds();
-	for (auto obj : getGame()->getActors())
-	{
-		if (obj->getID() != "Tile")
-			continue;
-		bool x_overlaps = false;
-		bool y_overlaps = false;
-		bool collision = false;
-		if ((getLeft() < obj->getLeft()) && (getRight() > obj->getLeft()))
-		{
-			x_overlaps = true;
-		}
-		if ((getTop() < obj->getBottom()) && (getBottom() > obj->getTop()))
-		{
-			y_overlaps = true;
-		}
-		
-		collision = x_overlaps && y_overlaps;
-
-		if (collision)
-		{
-			isOnGround = true;
-			pos.y = obj->getTop() - ((getBottom() - getTop()) / 2)-ysp;
-			ysp = 0;
-		}
-
-	}
-
 
 	if (!(leftPressed || rightPressed))
 	{
@@ -192,8 +165,36 @@ void Player::actorInput(const uint8_t * keystate)
 		
 	}
 
+	if (keystate[SDL_SCANCODE_UP])
+	{
+		Vector2 pos = getPosition();
+
+		pos.y += -4;
+		setPosition(pos);
+
+	}
+	if (keystate[SDL_SCANCODE_DOWN])
+	{
+
+		Vector2 pos = getPosition();
+
+		pos.y += +4;
+		setPosition(pos);
+
+	}
+
 
 	//animation speed according to the acceleration
 	sprite->setFrameRate(sprite->getOriginalFrameRate()+abs(gsp));
+	
+}
+
+void Player::rayCastResult(Vector2 position)
+{
+	if (!isOnGround)
+	{
+		isOnGround = true;
+		ysp = 0;
+	}
 	
 }

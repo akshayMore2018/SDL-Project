@@ -11,6 +11,7 @@ public:
 	void updateActor(float deltaTime);
 	void onAnimCompleteEvent(const std::string & animName);
 	void actorInput(const uint8_t * keystate);
+	void rayCastResult(Vector2 position);
 
 private:
 	class AnimSpriteComponent* sprite;

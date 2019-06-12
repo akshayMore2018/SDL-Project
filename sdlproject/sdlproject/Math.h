@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+
+
 class Vector2
 {
 public:
@@ -14,9 +16,18 @@ public:
 		, y(inY)
 	{}
 
-	
-	
+	bool operator!=(const Vector2 other)
+	{
+		if (this->x != other.x && this->y != other.y)
+		{
+			return true;
+		}
+		return false;
+	}
 };
+
+
+
 class Math
 {
 private:
