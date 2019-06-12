@@ -69,13 +69,14 @@ void Player::updateActor(float deltaTime)
 		}
 		pos.y += ysp;
 	}
-
 	pos.x += xsp;
 	
 
 
-	if (pos.x > 1030)
-		pos.x = -10;
+	if (pos.x > 1020)
+		pos.x = 4;
+	else if (pos.x < 4)
+		pos.x = 1020;
 
 	this->setPosition(pos);
 	this->setRotation(angle);
@@ -100,7 +101,6 @@ void Player::actorInput(const uint8_t * keystate)
 	if (keystate[SDL_SCANCODE_LEFT])
 	{
 		leftPressed = true;
-
 		movingDirection = -1;
 		gsp += acc*movingDirection;
 		if (gsp > 0)
@@ -117,8 +117,6 @@ void Player::actorInput(const uint8_t * keystate)
 		{
 			this->sprite->setAnimation("run", -1);
 		}
-		
-		
 	}
 	else if(keystate[SDL_SCANCODE_RIGHT])
 	{
@@ -163,36 +161,21 @@ void Player::actorInput(const uint8_t * keystate)
 		
 	}
 
-	if (keystate[SDL_SCANCODE_UP])
-	{
-		Vector2 pos = getPosition();
-		pos.y += -4;
-		setPosition(pos);
-	}
-	if (keystate[SDL_SCANCODE_DOWN])
-	{
-		Vector2 pos = getPosition();
-		pos.y += +4;
-		setPosition(pos);
-	}
-
-
 	//animation speed according to the acceleration
 	sprite->setFrameRate(sprite->getOriginalFrameRate()+abs(gsp));
 	
 }
+
 void Player::rayCastResult(Vector2 position)
 {
 	if (ysp < 0)
 		return;
-
 	if (!isOnGround)
 	{
 		isOnGround = true;
 		ysp = 0;
-		Vector2 pos = position;
-		pos.y = floor(pos.y / 16)*16-36;
+		Vector2 pos = getPosition();
+		pos.y = floor(position.y / 16)*16-36;
 		setPosition(pos);
-		std::cout << floor(pos.y / 16) << std::endl;
 	}
 }

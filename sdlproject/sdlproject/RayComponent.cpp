@@ -25,7 +25,7 @@ void RayComponent::draw(SDL_Renderer * renderer)
 
 void RayComponent::update(float deltaTime)
 {
-	this->points = Math::Bresenham(m_Owner->getLeft()+20, m_Owner->getBottom(), m_Owner->getLeft()+20, m_Owner->getBottom() + 30);
+	this->points = Math::Bresenham(m_Owner->getLeft()+20, m_Owner->getBottom(), m_Owner->getLeft()+20, m_Owner->getBottom() + 25);
 	int rayPointIndex = 0;
 	if(points.size()>0)
 	rayPointIndex = points.size()-1;
