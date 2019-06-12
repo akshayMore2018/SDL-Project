@@ -2,26 +2,27 @@
 #include "SpriteComponent.h"
 #include "Game.h"
 
-Tile::Tile(Game * game)
-	:Actor(game)
+Tile::Tile(const std::string& ID,Game * game)
+	:Actor(ID,game)
 {
-	getGame()->addTile(this);
 }
-
-Tile::~Tile()
-{
-	getGame()->removeTile(this);
-}
-
 void Tile::init()
 {
-	this->setScale(2);
 	collider = new CollisionComponent(this);
-	collider->setRectLocal(0, 0, 64, 32);
+	collider->setRectLocal(0, 0, 16, 16);
 	updateObjectBounds();
 
 	SpriteComponent* sprite = new SpriteComponent(this);
-	sprite->setTexture(this->getGame()->getTexture("Assets/metaTiles.png"));
+	int i = rand() % 6;
+	if (i > 3)
+	{
+		sprite->setTexture(this->getGame()->getTexture("Assets/map/metaTile.png"));
+	}
+	else
+	{
+		sprite->setTexture(this->getGame()->getTexture("Assets/map/metaTile2.png"));
+	}
+		
 }
 
 void Tile::updateActor(float deltaTime)

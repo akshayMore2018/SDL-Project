@@ -4,7 +4,7 @@
 class Player :public Actor
 {
 public:
-	Player(class Game* game);
+	Player(const std::string&  ID,class Game* game);
 	
 	void init();
 

@@ -9,6 +9,7 @@
 #include "CollisionComponent.h"
 #include "Tile.h"
 #include "RayComponent.h"
+#include "World.h"
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
 }
@@ -184,33 +185,13 @@ SDL_Texture * Game::getTexture(const std::string & filename)
 	return texture;
 }
 
-void Game::addTile(Tile * tile)
-{
-	mTiles.emplace_back(tile);
-}
-
-void Game::removeTile(Tile * tile)
-{
-	auto iter = std::find(mTiles.begin(),
-		mTiles.end(), tile);
-	if (iter != mTiles.end())
-	{
-		mTiles.erase(iter);
-	}
-}
-
 void Game::loadData()
 {
-	Player* player = new Player(this);
+	Player* player = new Player("Player",this);
 	player->init();
-
 	
-	for (int i = 0; i < 16; i++)
-	{
-		Tile* tile = new Tile(this);
-		tile->setPosition(Vector2((i*64+32), 400.0f));
-		tile->init();
-	}
+	mWorld = new World(64,48,this);
+	mWorld->init();
 
 }
 

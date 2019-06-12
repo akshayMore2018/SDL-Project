@@ -2,8 +2,8 @@
 #include "Game.h"
 #include "Component.h"
 #include "CollisionComponent.h"
-Actor::Actor(Game * game)
-	:m_State(EActive),m_Position(Vector2(0,0)),m_Scale(1.0f),m_Rotation(0.0f)
+Actor::Actor(const std::string& ID, class Game* game)
+	:ID(ID),m_State(EActive),m_Position(Vector2(0,0)),m_Scale(1.0f),m_Rotation(0.0f)
 	,m_Game(game), flipStateX(SDL_RendererFlip::SDL_FLIP_NONE)
 {
 	this->m_Game->addActor(this);

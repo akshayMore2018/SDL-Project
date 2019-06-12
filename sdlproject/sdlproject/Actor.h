@@ -13,7 +13,7 @@ public:
 		EDead
 	};
 
-	Actor(class Game* game);
+	Actor(const std::string& ID,class Game* game);
 	virtual ~Actor();
 
 	void update(float deltaTime);
@@ -24,25 +24,31 @@ public:
 	void processInput(const uint8_t* keystate);
 	void addComponent(class Component* component);
 	void removeComponent(class Component* component);
-	State getState()const;
-	const Vector2& getPosition()const;
-	float getScale()const;
-	float getRotation()const;
-	class Game* getGame();
 	
+//	setters
+	State getState()const;
 	void setPosition(const Vector2& position) { this->m_Position = position; }
 	void setScale(float scale) { this->m_Scale = scale; }
 	void setRotation(float rotation) { this->m_Rotation = rotation; }
 	void setState(State state) { this->m_State = state; }
-	SDL_RendererFlip flipStateX;
+	
 
+	//getters
+	const Vector2& getPosition()const;
+	float getScale()const;
+	float getRotation()const;
+	class Game* getGame();
+	const std::string& getID()const { return ID; }
 	const float getLeft() const { return left; }
 	const float getRight() const { return right; }
 	const float getTop() const { return top; }
 	const float getBottom() const { return bottom; }
 	void updateObjectBounds();
+
+	SDL_RendererFlip flipStateX;
 protected:
 	class CollisionComponent* collider;
+	std::string ID;
 
 private:
 	State m_State;
@@ -52,6 +58,7 @@ private:
 	std::vector<class Component*> m_Components;
 	class Game* m_Game;
 	float left, right, top, bottom;
+	
 };
 inline Actor::State Actor::getState() const
 {

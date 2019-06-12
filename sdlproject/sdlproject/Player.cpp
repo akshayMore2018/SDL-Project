@@ -5,8 +5,8 @@
 #include "CollisionComponent.h"
 #include "Tile.h" 
 #include "RayComponent.h"
-Player::Player(Game * game)
-	:Actor(game),
+Player::Player(const std::string& ID,Game * game)
+	:Actor(ID,game),
 	xsp(0.0f),ysp(0.0f),gsp(0.0f),angle(0),
 	acc(0.046875),dec(0.5),frc(acc),top(6),
 	air(0.09375), jmp(6.5), knxjmp(6), grv(0.21875),
@@ -38,8 +38,10 @@ void Player::updateActor(float deltaTime)
 {
 	Vector2 pos = this->getPosition();
 	updateObjectBounds();
-	for (auto obj : getGame()->getTiles())
+	for (auto obj : getGame()->getActors())
 	{
+		if (obj->getID() != "Tile")
+			continue;
 		bool x_overlaps = false;
 		bool y_overlaps = false;
 		bool collision = false;
@@ -56,7 +58,6 @@ void Player::updateActor(float deltaTime)
 
 		if (collision)
 		{
-			std::cout << "collision occured" << std::endl;
 			isOnGround = true;
 			pos.y = obj->getTop() - ((getBottom() - getTop()) / 2)-ysp;
 			ysp = 0;
@@ -76,7 +77,6 @@ void Player::updateActor(float deltaTime)
 			gsp = 0.0f;
 		}
 	}
-	
 	
 
 	if (gsp > top)

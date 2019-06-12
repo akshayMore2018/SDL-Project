@@ -25,14 +25,11 @@ public:
 	void addActor(class Actor* actor);
 	void removeActor(class Actor* actor);
 	SDL_Texture* getTexture(const std::string& filename);
+	std::vector<class Actor*>& getActors() { return m_Actors; }
 
-	void addTile(class Tile* tile);
-	void removeTile(class Tile* tile);
-	std::vector<class Tile*>& getTiles() { return mTiles; }
+	const class World* getWorld() const { return mWorld; }
+
 private:
-
-	
-
 	void loadData();
 	void unloadData();
 	void events();
@@ -51,5 +48,5 @@ private:
 	bool m_UpdatingActors;
 	std::vector<Actor*> m_PendingActors;
 	std::vector<Actor*> m_Actors;
-	std::vector<class Tile*> mTiles;
+	class World* mWorld;
 };
