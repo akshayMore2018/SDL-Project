@@ -1,9 +1,18 @@
 #pragma once
-#include "Actor.h"
-class Tile : public Actor
+#include <iostream>
+#include "Math.h"
+class Tile 
 {
 public:
-	Tile(const std::string& ID,class Game* game);
+	Tile(const std::string& ID);
 	void init();
-	void updateActor(float deltaTime);
+	void updateTile(float deltaTime);
+	void setPosition(float x,float y);
+	const Vector2& getPosition()const { return position; }
+	const int getWidth()const { return width; }
+	const int getHeight()const { return height; }
+private:
+	std::string ID;
+	Vector2 position;
+	int width, height;
 };

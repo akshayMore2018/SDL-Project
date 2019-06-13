@@ -1,18 +1,20 @@
 #pragma once
 #include "Game.h"
+#include "Actor.h"
 
 
-class World
+class World : public Actor
 {
 public:
-	World(int w, int h,class Game* game);
+	World(const std::string& ID, class Game* game);
 	const class Tile* GetTile(int x, int y)const;
 	void init();
-
-private:
-	void addTile(int x, int y, class Tile* tile);
 	void setDimension(int w, int h);
-	class Game* mGame;
+	int getXTiles()const { return w; }
+	int getYTiles()const { return h; }
+	void addTile(int x, int y, class Tile* tile);
+private:
+	
 	int w;
 	int h;
 	std::vector<std::vector<class Tile*> > map;

@@ -190,8 +190,10 @@ void Game::loadData()
 	Player* player = new Player("Player",this);
 	player->init();
 	
-	mWorld = new World(64,48,this);
+	mWorld = new World("map",this);
+	mWorld->setDimension(64, 48);
 	mWorld->init();
+
 
 }
 
@@ -292,8 +294,7 @@ void Game::render()
 	SDL_SetRenderDrawColor(this->m_Renderer, 255, 0, 0, 255);
 	
 
-	/*
-	* Debug
+	
 	for (auto collider : m_Colliders)
 	{
 		collider->draw(m_Renderer);
@@ -301,7 +302,7 @@ void Game::render()
 	for (auto ray : m_Rays)
 	{
 		ray->draw(m_Renderer);
-	}*/
+	}
 
 	SDL_RenderPresent(this->m_Renderer);
 }

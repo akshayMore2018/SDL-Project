@@ -1,25 +1,17 @@
 #include "World.h"
 #include "Math.h"
 #include "Tile.h"
-World::World(int w, int h,Game * game):w(w),h(h),mGame(game)
+#include "TileMapComponent.h"
+World::World(const std::string& ID, class Game* game):
+Actor(ID,game)
 {
 
 }
 
 void World::init()
 {
-	setDimension(w, h);
-
-	for (int i = 30; i < h; i++)
-	{
-		for (int j = 0; j < w ; j++)
-		{
-			Tile* tile = new Tile("Tile", this->mGame);
-			tile->setPosition(Vector2((j * 16 + 8), (i * 16 + 8)));
-			tile->init();
-			addTile(j, i, tile);
-		}
-	}
+	TileMapComponent* map = new TileMapComponent(this);
+	map->loadMap();
 
 }
 
@@ -37,6 +29,8 @@ void World::addTile(int x, int y, Tile * tile)
 
 void World::setDimension(int w, int h)
 {
+	this->w = w;
+	this->h = h;
 	map.resize(w);
 
 	for (int i = 0; i < w; i++)	
