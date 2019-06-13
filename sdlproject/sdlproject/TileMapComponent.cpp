@@ -7,6 +7,11 @@ TileMapComponent::TileMapComponent(World * actor, int draworder)
 
 }
 
+TileMapComponent::~TileMapComponent()
+{
+
+}
+
 void TileMapComponent::loadMap()
 {
 	setTexture(mWorld->getGame()->getTexture("Assets/map/metaTile.png"));
@@ -15,8 +20,7 @@ void TileMapComponent::loadMap()
 		for (int j = 0; j < mWorld->getXTiles(); j++)
 		{
 			Tile* tile = new Tile("Tile");
-			tile->setPosition((j * 16), (i * 16));
-			tile->init();
+			tile->init(j,i,16,16);
 			mWorld->addTile(j, i, tile);
 		}
 	}
@@ -35,10 +39,10 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 			for (int j = 0; j < mWorld->getXTiles(); j++)
 			{
 				SDL_Rect rect;
-				rect.x = static_cast<int>(mWorld->GetTile(j, i)->getPosition().x);
-				rect.y = static_cast<int>(mWorld->GetTile(j, i)->getPosition().y);
-				rect.w = mWorld->GetTile(j, i)->getWidth();
-				rect.h = mWorld->GetTile(j, i)->getHeight();
+				rect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x);
+				rect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y);
+				rect.w = mWorld->getTile(j, i)->getWidth();
+				rect.h = mWorld->getTile(j, i)->getHeight();
 
 				SDL_RenderCopyEx(renderer,
 					this->m_Texture,

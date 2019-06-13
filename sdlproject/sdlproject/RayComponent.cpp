@@ -64,7 +64,7 @@ bool RayComponent::canPointBeTravelled(int x, int y)
 	if (c > 47)return true;
 
 
-	if ((this->m_Owner->getGame()->getWorld()->GetTile(r, c))==nullptr)
+	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c))==nullptr)
 	{
 		return true;
 	}

@@ -8,6 +8,18 @@ Actor(ID,game)
 
 }
 
+World::~World()
+{
+	for (int i = 0; i < h; i++)
+	{
+		for (int j = 0; j < w; j++)
+		{
+			delete getTile(j, i);
+		}
+	}
+	map.clear();
+}
+
 void World::init()
 {
 	TileMapComponent* map = new TileMapComponent(this);
@@ -15,7 +27,7 @@ void World::init()
 
 }
 
-const Tile * World::GetTile(int x, int y)const
+const Tile * World::getTile(int x, int y)const
 {
 	return map[x][y];
 }
@@ -37,5 +49,4 @@ void World::setDimension(int w, int h)
 	{
 			map.at(i).resize(h, 0);
 	}
-
 }

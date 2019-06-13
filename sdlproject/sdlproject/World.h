@@ -7,7 +7,8 @@ class World : public Actor
 {
 public:
 	World(const std::string& ID, class Game* game);
-	const class Tile* GetTile(int x, int y)const;
+	~World();
+	const class Tile* getTile(int x, int y)const;
 	void init();
 	void setDimension(int w, int h);
 	int getXTiles()const { return w; }

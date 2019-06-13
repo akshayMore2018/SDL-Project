@@ -294,7 +294,7 @@ void Game::render()
 	SDL_SetRenderDrawColor(this->m_Renderer, 255, 0, 0, 255);
 	
 
-	
+	/*
 	for (auto collider : m_Colliders)
 	{
 		collider->draw(m_Renderer);
@@ -302,7 +302,7 @@ void Game::render()
 	for (auto ray : m_Rays)
 	{
 		ray->draw(m_Renderer);
-	}
+	}*/
 
 	SDL_RenderPresent(this->m_Renderer);
 }

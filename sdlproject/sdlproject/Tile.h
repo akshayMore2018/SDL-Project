@@ -5,9 +5,8 @@ class Tile
 {
 public:
 	Tile(const std::string& ID);
-	void init();
+	void init(int x, int y, int w, int h);
 	void updateTile(float deltaTime);
-	void setPosition(float x,float y);
 	const Vector2& getPosition()const { return position; }
 	const int getWidth()const { return width; }
 	const int getHeight()const { return height; }
