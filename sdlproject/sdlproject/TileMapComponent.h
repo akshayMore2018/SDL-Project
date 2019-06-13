@@ -14,4 +14,9 @@ public:
 
 private:
 	class World* mWorld;
+	const int tileWidth;
+	const int tileHeight;
+
+	//helper function;
+	
 };

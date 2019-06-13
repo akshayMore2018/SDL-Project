@@ -1,8 +1,10 @@
 #include "TileMapComponent.h"
 #include "World.h"
 #include "Tile.h"
+#include <fstream>
+#include <sstream>
 TileMapComponent::TileMapComponent(World * actor, int draworder)
-	:SpriteComponent(actor,draworder),mWorld(actor)
+	:SpriteComponent(actor,draworder),mWorld(actor),tileWidth(16),tileHeight(16)
 {
 
 }
@@ -14,14 +16,33 @@ TileMapComponent::~TileMapComponent()
 
 void TileMapComponent::loadMap()
 {
-	setTexture(mWorld->getGame()->getTexture("Assets/map/metaTile.png"));
-	for (int i = 30; i < mWorld->getYTiles(); i++)
+	setTexture(mWorld->getGame()->getTexture("Assets/map/tileset.png"));
+	std::ifstream file("Assets/map/map.csv");
+	int xImgTiles = m_TextureWidth / tileWidth;
+	if (file.is_open())
 	{
-		for (int j = 0; j < mWorld->getXTiles(); j++)
+		std::string line;
+		std::stringstream ss;
+		int r = 0, c = 0;
+		while (std::getline(file, line))
 		{
-			Tile* tile = new Tile("Tile");
-			tile->init(j,i,16,16);
-			mWorld->addTile(j, i, tile);
+			ss.str(line);
+			int i;
+			while (ss >> i)
+			{
+				//due to incorrect tile rendering order , passing r into column argument and vice versa.
+				Tile* tile = new Tile("solid", i);
+				tile->init(c, r, tileWidth, tileHeight);
+				tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
+				mWorld->addTile(c, r, tile);
+
+				c++;
+				if (ss.peek() == ',')
+					ss.ignore();
+			}
+			ss.clear();
+			r++;
+			c = 0;
 		}
 	}
 }
@@ -34,20 +55,27 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 {
 	if (m_Texture)
 	{
-		for (int i = 30; i < mWorld->getYTiles(); i++)
+		for (int i = 0; i < mWorld->getYTiles(); i++)
 		{
 			for (int j = 0; j < mWorld->getXTiles(); j++)
 			{
-				SDL_Rect rect;
-				rect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x);
-				rect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y);
-				rect.w = mWorld->getTile(j, i)->getWidth();
-				rect.h = mWorld->getTile(j, i)->getHeight();
+				if (mWorld->getTile(j, i)->getTileID() == -1)
+					continue;
+				SDL_Rect dstRect, srcRect;
+				dstRect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x);
+				dstRect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y);
+				dstRect.w = tileWidth;
+				dstRect.h = tileHeight;
+
+				srcRect.x = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().x);
+				srcRect.y = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().y);
+				srcRect.w = tileWidth;
+				srcRect.h = tileHeight;
 
 				SDL_RenderCopyEx(renderer,
 					this->m_Texture,
-					nullptr,
-					&rect,
+					&srcRect,
+					&dstRect,
 					0,
 					nullptr,
 					SDL_FLIP_NONE);

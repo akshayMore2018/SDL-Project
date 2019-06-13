@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "Game.h"
 #include "World.h"
+#include "Tile.h"
 #include <iostream>
 RayComponent::RayComponent(Actor * owner, int updateOrder)
 	:Component(owner, updateOrder)
@@ -63,8 +64,12 @@ bool RayComponent::canPointBeTravelled(int x, int y)
 	if (c < 0)return true;
 	if (c > 47)return true;
 
-
 	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c))==nullptr)
+	{
+		return true;
+	}
+
+	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c)->getTileID()) == -1)
 	{
 		return true;
 	}
