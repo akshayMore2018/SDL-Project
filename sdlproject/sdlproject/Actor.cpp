@@ -47,6 +47,10 @@ void Actor::onAnimCompleteEvent(const std::string & animName)
 {
 }
 
+void Actor::currentAnimFrame(const std::string & animName,int frame)
+{
+}
+
 void Actor::actorInput(const uint8_t * keystate)
 {
 }

@@ -20,6 +20,7 @@ public:
 	void updateComponent(float deltaTime);
 	virtual void updateActor(float deltaTime);
 	virtual void onAnimCompleteEvent(const std::string& animName);
+	virtual void currentAnimFrame(const std::string & animName,int frame);
 	virtual void actorInput(const uint8_t* keystate);
 	void processInput(const uint8_t* keystate);
 	void addComponent(class Component* component);

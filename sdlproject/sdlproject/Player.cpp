@@ -22,7 +22,8 @@ void Player::init()
 	this->setScale(2);
 	sprite = new AnimSpriteComponent(this,101);
 	sprite->addAnimation("run", "Assets/playerAnimSheets/run0.png", 0, 0, 50, 37, 9, 6);
-	sprite->addAnimation("groundAttack01", "Assets/playerAnimSheets/groundAttack01.png", 0, 0, 50, 37, 7, 5);
+	sprite->addAnimation("jump", "Assets/playerAnimSheets/jump.png", 0, 0, 50, 37, 7, 4);
+	sprite->addAnimation("fall", "Assets/playerAnimSheets/fall.png", 0, 0, 50, 37, 7, 2);
 	sprite->addAnimation("idle", "Assets/playerAnimSheets/idle0.png", 0, 0, 50, 37, 5, 3);
 	sprite->setAnimation("idle", -1);
 
@@ -71,8 +72,6 @@ void Player::updateActor(float deltaTime)
 	}
 	pos.x += xsp;
 	
-
-
 	if (pos.x > 1020)
 		pos.x = 4;
 	else if (pos.x < 4)
@@ -80,6 +79,16 @@ void Player::updateActor(float deltaTime)
 
 	this->setPosition(pos);
 	this->setRotation(angle);
+
+	if (!isOnGround && ysp > 0)
+	{
+		if (this->sprite->currentAnimID != "fall")
+		{
+			this->sprite->setAnimation("fall", -1);
+		}
+	}
+
+
 }
 
 void Player::onAnimCompleteEvent(const std::string & animName)
@@ -94,6 +103,11 @@ void Player::onAnimCompleteEvent(const std::string & animName)
 	}
 	
 }
+void Player::currentAnimFrame(const std::string & animName, int frame)
+{
+	
+}
+
 void Player::actorInput(const uint8_t * keystate)
 {
 	leftPressed = false;
@@ -146,6 +160,13 @@ void Player::actorInput(const uint8_t * keystate)
 			if (this->sprite->currentAnimID != "idle")
 			{
 				this->sprite->setAnimation("idle", -1);
+			}
+		}
+		else
+		{
+			if (this->sprite->currentAnimID != "run")
+			{
+				this->sprite->setAnimation("run", -1);
 			}
 		}
 		movingDirection = gsp / abs(gsp);

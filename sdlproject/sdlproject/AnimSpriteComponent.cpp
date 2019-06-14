@@ -48,6 +48,7 @@ void AnimSpriteComponent::update(float deltaTime)
 			this->animComplete = true;
 			this->m_Owner->onAnimCompleteEvent(this->currentAnimID);
 		}
+		this->m_Owner->currentAnimFrame(this->currentAnimID,(int)mCurrFrame);
 		srcRect.x = (int)mCurrFrame*this->srcRect.w;
 	}
 }

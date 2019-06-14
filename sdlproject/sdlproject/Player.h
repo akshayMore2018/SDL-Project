@@ -10,6 +10,7 @@ public:
 
 	void updateActor(float deltaTime);
 	void onAnimCompleteEvent(const std::string & animName);
+	void currentAnimFrame(const std::string & animName,int frame);
 	void actorInput(const uint8_t * keystate);
 	void rayCastResult(Vector2 position);
 
