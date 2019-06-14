@@ -24,8 +24,8 @@ void Actor::update(float deltaTime)
 {
 	if (m_State == EActive)
 	{
-		this->updateComponent(deltaTime);
 		this->updateActor(deltaTime);
+		this->updateComponent(deltaTime);
 	}
 }
 

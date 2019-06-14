@@ -1,6 +1,7 @@
 #include "CollisionComponent.h"
 #include "Actor.h"
 #include "Game.h"
+#include "World.h"
 #include <iostream>
 CollisionComponent::CollisionComponent(Actor * owner, int updateOrder)
 :Component(owner,updateOrder), collisionRect{0,0,0,0},left(0),right(0),top(0),bottom(0)
@@ -20,8 +21,8 @@ void CollisionComponent::draw(SDL_Renderer * renderer)
 
 void CollisionComponent::update(float deltaTime)
 {
-	collisionRect.x = static_cast<int>(this->m_Owner->getPosition().x-collisionRect.w/2 + localX);
-	collisionRect.y = static_cast<int>(this->m_Owner->getPosition().y-collisionRect.h/2 + localY);
+	collisionRect.x = static_cast<int>(this->m_Owner->getPosition().x-collisionRect.w/2 + localX - World::camera.x);
+	collisionRect.y = static_cast<int>(this->m_Owner->getPosition().y-collisionRect.h/2 + localY - World::camera.y);
 	updateObjectBounds();
 }
 

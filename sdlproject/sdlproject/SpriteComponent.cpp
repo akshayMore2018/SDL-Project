@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "Game.h"
 #include <iostream>
+#include "World.h"
 
 SpriteComponent::SpriteComponent(Actor * owner, int drawOrder)
 	:Component(owner),
@@ -28,8 +29,8 @@ void SpriteComponent::draw(SDL_Renderer * renderer)
 		rect.w = static_cast<int>(this->m_TextureWidth*this->m_Owner->getScale());
 		rect.h = static_cast<int>(this->m_TextureHeight*this->m_Owner->getScale());
 
-		rect.x = static_cast<int>(this->m_Owner->getPosition().x - rect.w / 2);
-		rect.y = static_cast<int>(this->m_Owner->getPosition().y - rect.h / 2);
+		rect.x = static_cast<int>(this->m_Owner->getPosition().x - rect.w / 2 - World::camera.x);
+		rect.y = static_cast<int>(this->m_Owner->getPosition().y - rect.h / 2 - World::camera.y);
 
 		SDL_RenderCopyEx(renderer,
 			this->m_Texture,

@@ -3,8 +3,12 @@
 #include "Tile.h"
 #include <fstream>
 #include <sstream>
+
+const int TileMapComponent::tileWidth = 16;
+const int TileMapComponent::tileHeight = 16;
+
 TileMapComponent::TileMapComponent(World * actor, int draworder)
-	:SpriteComponent(actor,draworder),mWorld(actor),tileWidth(16),tileHeight(16)
+	:SpriteComponent(actor,draworder),mWorld(actor)
 {
 
 }
@@ -62,8 +66,8 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 				if (mWorld->getTile(j, i)->getTileID() == -1)
 					continue;
 				SDL_Rect dstRect, srcRect;
-				dstRect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x);
-				dstRect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y);
+				dstRect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x - World::camera.x);
+				dstRect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y - World::camera.y);
 				dstRect.w = tileWidth;
 				dstRect.h = tileHeight;
 

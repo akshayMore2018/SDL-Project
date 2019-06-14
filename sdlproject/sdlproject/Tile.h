@@ -10,7 +10,6 @@ public:
 	void updateTile(float deltaTime);
 
 	void setImgSrcCoord(int x, int y);
-
 	const Vector2& getPosition()const { return position; }
 	const Vector2& getImgSrc()const { return imgSrc; }
 	const int getWidth()const { return width; }

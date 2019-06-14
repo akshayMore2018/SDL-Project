@@ -1,6 +1,7 @@
 #include "AnimSpriteComponent.h"
 #include "Actor.h"
 #include "Game.h"
+#include "World.h"
 
 AnimSpriteComponent::AnimSpriteComponent(Actor * owner, int draworder)
 	:SpriteComponent(owner,draworder),
@@ -58,9 +59,8 @@ void AnimSpriteComponent::draw(SDL_Renderer * renderer)
 	if (this->m_Texture)
 	{
 
-		this->dstRect.x = this->m_Owner->getPosition().x - this->dstRect.w / 2;
-		this->dstRect.y = this->m_Owner->getPosition().y - this->dstRect.h / 2;
-
+		this->dstRect.x = this->m_Owner->getPosition().x - this->dstRect.w / 2 - World::camera.x;
+		this->dstRect.y = this->m_Owner->getPosition().y - this->dstRect.h / 2 - World::camera.y;
 		SDL_RenderCopyEx(
 			renderer,
 			this->m_Texture,

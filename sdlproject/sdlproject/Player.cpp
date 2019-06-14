@@ -18,7 +18,7 @@ Player::Player(const std::string& ID,Game * game)
 
 void Player::init()
 {
-	this->setPosition(Vector2(512.0f, 17*16));
+	this->setPosition(Vector2(512.0f, 384.0f));
 	this->setScale(2);
 	sprite = new AnimSpriteComponent(this,101);
 	sprite->addAnimation("run", "Assets/playerAnimSheets/run0.png", 0, 0, 50, 37, 9, 6);
@@ -72,10 +72,10 @@ void Player::updateActor(float deltaTime)
 	}
 	pos.x += xsp;
 	
-	if (pos.x > 1020)
-		pos.x = 4;
-	else if (pos.x < 4)
-		pos.x = 1020;
+	if (pos.x > 149*16)
+		pos.x = 149*16;
+	else if (pos.x < 16)
+		pos.x = 16;
 
 	this->setPosition(pos);
 	this->setRotation(angle);
@@ -87,7 +87,7 @@ void Player::updateActor(float deltaTime)
 			this->sprite->setAnimation("fall", -1);
 		}
 	}
-
+	isOnGround = false;
 
 }
 
@@ -181,7 +181,6 @@ void Player::actorInput(const uint8_t * keystate)
 		}
 		
 	}
-
 	//animation speed according to the acceleration
 	sprite->setFrameRate(sprite->getOriginalFrameRate()+abs(gsp));
 	
@@ -194,9 +193,12 @@ void Player::rayCastResult(Vector2 position)
 	if (!isOnGround)
 	{
 		isOnGround = true;
-		ysp = 0;
-		Vector2 pos = getPosition();
-		pos.y = floor(position.y / 16)*16-36;
-		setPosition(pos);
+		if (ysp>0)
+		{
+			ysp = 0;
+			Vector2 pos = getPosition();
+			pos.y = floor(position.y / 16) * 16 - 36;
+			setPosition(pos);
+		}
 	}
 }

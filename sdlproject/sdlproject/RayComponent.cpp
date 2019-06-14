@@ -26,7 +26,7 @@ void RayComponent::draw(SDL_Renderer * renderer)
 
 void RayComponent::update(float deltaTime)
 {
-	this->points = Math::Bresenham(m_Owner->getLeft()+20, m_Owner->getBottom(), m_Owner->getLeft()+20, m_Owner->getBottom() + 25);
+	this->points = Math::Bresenham((m_Owner->getLeft()+20), m_Owner->getBottom(), (m_Owner->getLeft() + 20), m_Owner->getBottom()+ 10);
 	int rayPointIndex = 0;
 	if(points.size()>0)
 	rayPointIndex = points.size()-1;
@@ -56,13 +56,13 @@ const Tile * RayComponent::getTile() const
 
 bool RayComponent::canPointBeTravelled(int x, int y)
 {
-	int r = floor(x / 16);
-	int c = floor(y / 16);
+	int r = floor((x + World::camera.x) / 16);
+	int c = floor((y + World::camera.y) / 16);
 	
 	if (r < 0)return true;
-	if (r > 63)return true;
+	if (r > this->m_Owner->getGame()->getWorld()->getXTiles() - 1)return true;
 	if (c < 0)return true;
-	if (c > 47)return true;
+	if (c > this->m_Owner->getGame()->getWorld()->getYTiles() - 1)return true;
 
 	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c))==nullptr)
 	{
@@ -73,6 +73,6 @@ bool RayComponent::canPointBeTravelled(int x, int y)
 	{
 		return true;
 	}
-
+	std::cout << "r :" << r << " c :" << c << std::endl;
 	return false;
 }
