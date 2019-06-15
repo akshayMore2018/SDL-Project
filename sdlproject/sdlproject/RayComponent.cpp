@@ -4,10 +4,11 @@
 #include "World.h"
 #include "Tile.h"
 #include <iostream>
-RayComponent::RayComponent(Actor * owner, int updateOrder)
+RayComponent::RayComponent(Actor * owner, RAY type, int updateOrder)
 	:Component(owner, updateOrder)
 {
 	this->m_Owner->getGame()->addRay(this);
+	this->rayType = type;
 }
 
 RayComponent::~RayComponent()
@@ -26,7 +27,18 @@ void RayComponent::draw(SDL_Renderer * renderer)
 
 void RayComponent::update(float deltaTime)
 {
-	this->points = Math::Bresenham((m_Owner->getLeft()+20), m_Owner->getBottom(), (m_Owner->getLeft() + 20), m_Owner->getBottom()+ 10);
+	switch (rayType)
+	{
+	case LEFT:
+		this->points = Math::Bresenham(m_Owner->getLeft(), m_Owner->getBottom() - 10, (m_Owner->getLeft() - 2), m_Owner->getBottom() - 10);
+		break;
+	case RIGHT:
+		this->points = Math::Bresenham(m_Owner->getRight(), m_Owner->getBottom() - 10, (m_Owner->getRight() + 2), m_Owner->getBottom() - 10);
+		break;
+	default:
+		this->points = Math::Bresenham((m_Owner->getLeft() + 20), m_Owner->getBottom(), (m_Owner->getLeft() + 20), m_Owner->getBottom() + 7);
+	}
+	
 	int rayPointIndex = 0;
 	if(points.size()>0)
 	rayPointIndex = points.size()-1;
@@ -35,7 +47,7 @@ void RayComponent::update(float deltaTime)
 		rayPoint = points[rayPointIndex];
 		if (!canPointBeTravelled(rayPoint.x, rayPoint.y)) {
 			position = rayPoint;
-			this->m_Owner->rayCastResult(position);
+			this->m_Owner->rayCastResult(rayType,position);
 			break;
 		}
 		if (points[0] != position) {
@@ -47,11 +59,6 @@ void RayComponent::update(float deltaTime)
 			if (rayPointIndex >= points.size()) break;
 		}
 	}
-}
-
-const Tile * RayComponent::getTile() const
-{
-	return nullptr;
 }
 
 bool RayComponent::canPointBeTravelled(int x, int y)
@@ -69,10 +76,15 @@ bool RayComponent::canPointBeTravelled(int x, int y)
 		return true;
 	}
 
+	if (this->m_Owner->getGame()->getWorld()->getTile(r, c)->type==Tile::BACKGROUND)
+	{
+		return true;
+	}
+
 	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c)->getTileID()) == -1)
 	{
 		return true;
 	}
-	std::cout << "r :" << r << " c :" << c << std::endl;
+	
 	return false;
 }

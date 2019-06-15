@@ -104,7 +104,7 @@ void Actor::updateObjectBounds()
 	
 }
 
-void Actor::rayCastResult(Vector2 position)
+void Actor::rayCastResult(short unsigned int type,Vector2 position)
 {
 
 }

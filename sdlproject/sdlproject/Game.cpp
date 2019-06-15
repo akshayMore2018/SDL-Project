@@ -196,6 +196,28 @@ void Game::loadData()
 	mWorld->init();
 
 
+	Actor* temp = new Actor("bg",this);
+	temp->setPosition(Vector2(512.0f, 384.0f));
+	// Create the "far back" background
+	BGSpriteComponent* bg = new BGSpriteComponent(temp,10);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	std::vector<SDL_Texture*> bgtexs = {
+		getTexture("Assets/background.png"),
+		getTexture("Assets/background.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(0.0f);
+	// Create the closer background
+	bg = new BGSpriteComponent(temp, 30);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	bgtexs = {
+		getTexture("Assets/middleground.png"),
+		getTexture("Assets/middleground.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(0.0f);
+
+
 }
 
 void Game::unloadData()
@@ -294,14 +316,14 @@ void Game::render()
 	}
 	SDL_SetRenderDrawColor(this->m_Renderer, 255, 0, 0, 255);
 	
-	for (auto collider : m_Colliders)
+	/*for (auto collider : m_Colliders)
 	{
 		collider->draw(m_Renderer);
 	}
 	for (auto ray : m_Rays)
 	{
 		ray->draw(m_Renderer);
-	}
+	}*/
 
 	SDL_RenderPresent(this->m_Renderer);
 }

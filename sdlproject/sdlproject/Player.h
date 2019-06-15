@@ -12,7 +12,7 @@ public:
 	void onAnimCompleteEvent(const std::string & animName);
 	void currentAnimFrame(const std::string & animName,int frame);
 	void actorInput(const uint8_t * keystate);
-	void rayCastResult(Vector2 position);
+	void rayCastResult(short unsigned int type,Vector2 position);
 
 private:
 	class AnimSpriteComponent* sprite;

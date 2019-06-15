@@ -5,7 +5,13 @@
 class Tile 
 {
 public:
-	Tile(const std::string& type, int tileSetID);
+	enum LAYER
+	{
+		SOLID,
+		BACKGROUND
+	};
+
+	Tile(const short unsigned int type, int tileSetID);
 	void init(int x, int y, int w, int h);
 	void updateTile(float deltaTime);
 
@@ -16,9 +22,9 @@ public:
 	const int getHeight()const { return height; }
 
 	const int getTileID()const { return ID; }
-
+	short unsigned int type;
 private:
-	std::string type;
+	
 	int ID;
 	Vector2 position;
 	int width, height;

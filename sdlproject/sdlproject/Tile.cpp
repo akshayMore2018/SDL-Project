@@ -1,9 +1,9 @@
 #include "Tile.h"
 
 
-Tile::Tile(const std::string & type ,int tileSetID):type(type),ID(tileSetID)
+Tile::Tile(const short unsigned int type ,int tileSetID):type(type),ID(tileSetID)
 {
-
+	
 }
 
 void Tile::init(int x, int y , int w, int h)

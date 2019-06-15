@@ -5,6 +5,7 @@
 #include "CollisionComponent.h"
 #include "Tile.h" 
 #include "RayComponent.h"
+#include "World.h"
 Player::Player(const std::string& ID,Game * game)
 	:Actor(ID,game),
 	xsp(0.0f),ysp(0.0f),gsp(0.0f),angle(0),
@@ -30,8 +31,10 @@ void Player::init()
 	collider = new CollisionComponent(this);
 	collider->setRectLocal(0,5,45, 65);
 	updateObjectBounds();
-
-	RayComponent* ray = new RayComponent(this);
+	
+	RayComponent* ray = new RayComponent(this, RayComponent::BOTTOM);
+	ray = new RayComponent(this, RayComponent::RIGHT);
+	ray = new RayComponent(this, RayComponent::LEFT);
 
 }
 void Player::updateActor(float deltaTime)
@@ -52,8 +55,8 @@ void Player::updateActor(float deltaTime)
 	}
 	
 
-	if (gsp > top)
-		gsp = top;
+	if (abs(gsp) > top)
+		gsp = top*movingDirection;
 
 	if (isOnGround)
 	{
@@ -186,19 +189,42 @@ void Player::actorInput(const uint8_t * keystate)
 	
 }
 
-void Player::rayCastResult(Vector2 position)
+void Player::rayCastResult(short unsigned int type,Vector2 position)
 {
-	if (ysp < 0)
-		return;
-	if (!isOnGround)
+	switch (type)
 	{
-		isOnGround = true;
-		if (ysp>0)
+	case RayComponent::RIGHT:
+		if (movingDirection > 0)
 		{
-			ysp = 0;
+			gsp = 0;
 			Vector2 pos = getPosition();
-			pos.y = floor(position.y / 16) * 16 - 36;
+			pos.x = floor((position.x + World::camera.x) / 16) * 16 - 45 / 2;
 			setPosition(pos);
 		}
+		break;
+	case RayComponent::LEFT:
+		if (movingDirection < 0)
+		{
+			gsp = 0;
+			Vector2 pos = getPosition();
+			pos.x = floor((position.x + World::camera.x) / 16) * 16 + 16 + 45/2;
+			setPosition(pos);
+		}
+		break;
+	default:
+		if (ysp < 0)
+			return;
+		if (!isOnGround)
+		{
+			isOnGround = true;
+			if (ysp > 0)
+			{
+				ysp = 0;
+				Vector2 pos = getPosition();
+				pos.y = floor((position.y +World::camera.y) / 16) * 16 - 36;
+				setPosition(pos);
+			}
+		}
 	}
+	
 }

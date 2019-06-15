@@ -4,7 +4,7 @@
 #include "TileMapComponent.h"
 
 SDL_Rect World::camera = { 0,0,1024,768 };
-const int World::mapWidth = 64 * 16;
+const int World::mapWidth = 150 * 16;
 const int World::mapHeight = 48 * 16;
 
 
@@ -52,8 +52,7 @@ void World::init()
 
 
 	TileMapComponent* tileMap = new TileMapComponent(this);
-	tileMap->loadMap();
-
+	tileMap->loadMap("Assets/map/map.csv");
 }
 
 const Tile * World::getTile(int x, int y)const

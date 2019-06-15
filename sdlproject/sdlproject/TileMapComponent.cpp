@@ -18,10 +18,10 @@ TileMapComponent::~TileMapComponent()
 
 }
 
-void TileMapComponent::loadMap()
+void TileMapComponent::loadMap(const std::string& mapFile)
 {
 	setTexture(mWorld->getGame()->getTexture("Assets/map/tileset.png"));
-	std::ifstream file("Assets/map/map.csv");
+	std::ifstream file(mapFile.c_str());
 	int xImgTiles = m_TextureWidth / tileWidth;
 	if (file.is_open())
 	{
@@ -35,11 +35,21 @@ void TileMapComponent::loadMap()
 			while (ss >> i)
 			{
 				//due to incorrect tile rendering order , passing r into column argument and vice versa.
-				Tile* tile = new Tile("solid", i);
+				Tile* tile;
+				if (i == 48 || i == 49 || i == 207 || i == 209 || i==228
+					|| i == 190 || i == 189 || i == 187 || i == 188 || i == 210
+					|| i == 230 || i == 227 || i == 138)
+				{
+					tile = new Tile(Tile::BACKGROUND, i);
+				}
+				else
+				{
+					tile = new Tile(Tile::SOLID, i);
+				}
+				
 				tile->init(c, r, tileWidth, tileHeight);
 				tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
 				mWorld->addTile(c, r, tile);
-
 				c++;
 				if (ss.peek() == ',')
 					ss.ignore();
@@ -83,6 +93,7 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 					0,
 					nullptr,
 					SDL_FLIP_NONE);
+
 			}
 		}
 	}
