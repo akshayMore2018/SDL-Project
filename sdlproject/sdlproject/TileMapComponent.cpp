@@ -24,78 +24,152 @@ void TileMapComponent::loadMap(const std::string& mapFile)
 {
 	setTexture(mWorld->getGame()->getTexture("Assets/map/tileset.png"));
 
-	std::map<std::string, std::string> mapData;
-	int xImgTiles = m_TextureWidth / tileWidth;
+	std::string file = "Assets/map/map.tmx";
+	int tileWidth;
+	int tileHeight;
+	int xTiles;
+	int yTiles;
+	int mapWidth;
+	int mapHeight;
+
 	//xml parsing
 	tinyxml2::XMLDocument doc;
-	doc.LoadFile("Assets/map/map.tmx");
-	tinyxml2::XMLNode * pRoot = doc.FirstChild();
-	if (pRoot == nullptr)
+	doc.LoadFile(file.c_str());
+	tinyxml2::XMLNode * mapRoot = doc.FirstChildElement("map");
+	if (mapRoot == nullptr)
 	{
 		std::cout << "XML_ERROR_FILE_READ_ERROR :" << tinyxml2::XML_ERROR_FILE_READ_ERROR << std::endl;
 	}
-	tinyxml2::XMLElement * pElement = pRoot->FirstChildElement("layer");
-	if (pElement != nullptr)
+	else
 	{
-		const char * layer = nullptr;
-		layer = pElement->Attribute("name");
-		if (layer == nullptr) std::cout << "XML_ERROR_PARSING_LAYER_NAME" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
-		std::string layerName = layer;
-		std::cout << layerName.c_str() << std::endl;
-
-		tinyxml2::XMLElement * dataTag;
-		dataTag = pElement->FirstChildElement("data");
-
-		if (dataTag != nullptr)
+		std::stringstream ss;
+		int i = 0;
+		const char * temp = nullptr;
+		temp = doc.FirstChildElement("map")->Attribute("width");
+		if (temp!=nullptr)
 		{
-			tinyxml2::XMLElement * tile = dataTag->FirstChildElement("tile");
-			
-			int r = 0, c = 0;
-			std::stringstream ss;
-			int i = 0;
-			while (tile != nullptr)
-			{
-				if (tile == nullptr)
-				{
-					std::cout << "XML_ERROR_PARSING_ELEMENT_TILE" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
-				}
-				else
-				{
-					if (c > 149)
-					{
-						c = 0;
-						r++;
-					}
-					
-					const char * tilegid = nullptr;
-					tilegid = tile->Attribute("gid");
-					if (tilegid != nullptr)
-					{
-						ss.str(tilegid);
-						ss >> i;
-						ss.clear();
-						i--;
-
-						Tile* tile = new Tile(Tile::SOLID, i);
-						tile->init(c, r, tileWidth, tileHeight);
-						tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
-						mWorld->addTile(c, r, tile);
-
-					}
-					
-
-					std::cout << "c :" << c << " r:" << r << std::endl;
-					c++;
-				}
-
-				tile = tile->NextSiblingElement("tile");
-			}
-			
+			ss.str(temp);
+			ss >> i;
+			xTiles = i;
+			ss.clear();
 		}
-		//pElement = pElement->NextSiblingElement("layer");
+		else
+		{
+			std::cout << "XML_ERROR_PARSING_MAP_XTILES" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
+		}
+		
+		temp = doc.FirstChildElement("map")->Attribute("height");
+
+		if (temp != nullptr)
+		{
+			ss.str(temp);
+			ss >> i;
+			yTiles = i;
+			ss.clear();
+		}
+		else
+		{
+			std::cout << "XML_ERROR_PARSING_MAP_YTILES" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
+		}
+
+		temp = doc.FirstChildElement("map")->Attribute("tilewidth");
+
+		if (temp != nullptr)
+		{
+			ss.str(temp);
+			ss >> i;
+			tileWidth = i;
+			ss.clear();
+		}
+		else
+		{
+			std::cout << "XML_ERROR_PARSING_MAP_TILEWIDTH" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
+		}
+
+		temp = doc.FirstChildElement("map")->Attribute("tileheight");
+
+		if (temp != nullptr)
+		{
+			ss.str(temp);
+			ss >> i;
+			tileHeight = i;
+			ss.clear();
+		}
+		else
+		{
+			std::cout << "XML_ERROR_PARSING_MAP_TILEHEIGHT" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
+		}
+
+		mapWidth = xTiles * tileWidth;
+		mapHeight = yTiles * tileHeight;
+
+		std::cout << "tileWidth :" << tileWidth << std::endl;
+		std::cout << "tileHeight :" << tileHeight << std::endl;
+		std::cout << "xTiles :" << xTiles << std::endl;
+		std::cout << "yTiles :" << yTiles << std::endl;
+		std::cout << "mapWidth :" << mapWidth << std::endl;
+		std::cout << "mapHeight :" << mapHeight << std::endl;
+
+		ss.clear();
+		i = 0;
+
+		int xImgTiles = m_TextureWidth / tileWidth;
+		tinyxml2::XMLElement * layerElement = mapRoot->FirstChildElement("layer");
+		if (layerElement != nullptr)
+		{
+			const char * layer = nullptr;
+			layer = layerElement->Attribute("name");
+			if (layer == nullptr) std::cout << "XML_ERROR_PARSING_LAYER_NAME" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
+			std::string layerName = layer;
+			std::cout << layerName.c_str() << std::endl;
+
+			tinyxml2::XMLElement * dataTag;
+			dataTag = layerElement->FirstChildElement("data");
+
+			if (dataTag != nullptr)
+			{
+				tinyxml2::XMLElement * tile = dataTag->FirstChildElement("tile");
+
+				int r = 0, c = 0;
+				while (tile != nullptr)
+				{
+					if (tile == nullptr)
+					{
+						std::cout << "XML_ERROR_PARSING_ELEMENT_TILE" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
+					}
+					else
+					{
+						if (c > (xTiles - 1))
+						{
+							c = 0;
+							r++;
+						}
+
+						const char * tilegid = nullptr;
+						tilegid = tile->Attribute("gid");
+						if (tilegid != nullptr)
+						{
+							ss.str(tilegid);
+							ss >> i;
+							ss.clear();
+							i--;
+
+							Tile* tile = new Tile(Tile::SOLID, i);
+							tile->init(c, r, tileWidth, tileHeight);
+							tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
+							mWorld->addTile(c, r, tile);
+
+						}
+						c++;
+					}
+					tile = tile->NextSiblingElement("tile");
+				}
+
+			}
+			//layerElement = layerElement->NextSiblingElement("layer");
+		}
 	}
 	doc.Clear();
-
 }
 
 void TileMapComponent::update(float deltaTime)
