@@ -6,8 +6,12 @@
 #include "tinyxml2.h"
 #include <map>
 
-const int TileMapComponent::tileWidth = 16;
-const int TileMapComponent::tileHeight = 16;
+int TileMapComponent::tileWidth = 0;
+int TileMapComponent::tileHeight = 0;
+int TileMapComponent::xTiles = 0;
+int TileMapComponent::yTiles = 0;
+int TileMapComponent::mapWidth = 0;
+int TileMapComponent::mapHeight = 0;
 
 TileMapComponent::TileMapComponent(World * actor, int draworder)
 	:SpriteComponent(actor,draworder),mWorld(actor)
@@ -17,7 +21,14 @@ TileMapComponent::TileMapComponent(World * actor, int draworder)
 
 TileMapComponent::~TileMapComponent()
 {
-
+	for (int i = 0; i < yTiles; i++)
+	{
+		for (int j = 0; j < xTiles; j++)
+		{
+			delete gridMap[j][i];
+		}
+	}
+	gridMap.clear();
 }
 
 void TileMapComponent::loadMap(const std::string& mapFile)
@@ -25,13 +36,6 @@ void TileMapComponent::loadMap(const std::string& mapFile)
 	setTexture(mWorld->getGame()->getTexture("Assets/map/tileset.png"));
 
 	std::string file = "Assets/map/map.tmx";
-	int tileWidth;
-	int tileHeight;
-	int xTiles;
-	int yTiles;
-	int mapWidth;
-	int mapHeight;
-
 	//xml parsing
 	tinyxml2::XMLDocument doc;
 	doc.LoadFile(file.c_str());
@@ -110,18 +114,22 @@ void TileMapComponent::loadMap(const std::string& mapFile)
 		std::cout << "mapWidth :" << mapWidth << std::endl;
 		std::cout << "mapHeight :" << mapHeight << std::endl;
 
+		gridMap.resize(xTiles);
+		for (int i = 0; i < xTiles; i++)
+		{
+			gridMap.at(i).resize(yTiles, 0);
+		}
 		ss.clear();
 		i = 0;
 
 		int xImgTiles = m_TextureWidth / tileWidth;
 		tinyxml2::XMLElement * layerElement = mapRoot->FirstChildElement("layer");
-		if (layerElement != nullptr)
+		while (layerElement != nullptr)
 		{
 			const char * layer = nullptr;
 			layer = layerElement->Attribute("name");
 			if (layer == nullptr) std::cout << "XML_ERROR_PARSING_LAYER_NAME" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
 			std::string layerName = layer;
-			std::cout << layerName.c_str() << std::endl;
 
 			tinyxml2::XMLElement * dataTag;
 			dataTag = layerElement->FirstChildElement("data");
@@ -154,10 +162,19 @@ void TileMapComponent::loadMap(const std::string& mapFile)
 							ss.clear();
 							i--;
 
-							Tile* tile = new Tile(Tile::SOLID, i);
+							Tile* tile;
+
+							if (layerName == "solid")
+							{
+								tile = new Tile(Tile::SOLID, i);
+							}
+							else
+							{
+								tile = new Tile(Tile::BACKGROUND, i);
+							}
 							tile->init(c, r, tileWidth, tileHeight);
 							tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
-							mWorld->addTile(c, r, tile);
+							gridMap[c][r] = tile;
 
 						}
 						c++;
@@ -166,7 +183,7 @@ void TileMapComponent::loadMap(const std::string& mapFile)
 				}
 
 			}
-			//layerElement = layerElement->NextSiblingElement("layer");
+			layerElement = layerElement->NextSiblingElement("layer");
 		}
 	}
 	doc.Clear();
@@ -180,20 +197,20 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 {
 	if (m_Texture)
 	{
-		for (int i = 0; i < mWorld->getYTiles(); i++)
+		for (int i = 0; i < yTiles; i++)
 		{
-			for (int j = 0; j < mWorld->getXTiles(); j++)
+			for (int j = 0; j < xTiles; j++)
 			{
-				if (mWorld->getTile(j, i))
+				if (gridMap[j][i])
 				{
 					SDL_Rect dstRect, srcRect;
-					dstRect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x - World::camera.x);
-					dstRect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y - World::camera.y);
+					dstRect.x = static_cast<int>(gridMap[j][i]->getPosition().x - World::camera.x);
+					dstRect.y = static_cast<int>(gridMap[j][i]->getPosition().y - World::camera.y);
 					dstRect.w = tileWidth;
 					dstRect.h = tileHeight;
 
-					srcRect.x = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().x);
-					srcRect.y = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().y);
+					srcRect.x = static_cast<int>(gridMap[j][i]->getImgSrc().x);
+					srcRect.y = static_cast<int>(gridMap[j][i]->getImgSrc().y);
 					srcRect.w = tileWidth;
 					srcRect.h = tileHeight;
 
@@ -210,4 +227,9 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 			}
 		}
 	}
+}
+
+const Tile * TileMapComponent::getTile(int x, int y) const
+{
+	return gridMap[x][y];
 }

@@ -4,6 +4,7 @@
 #include "World.h"
 #include "Tile.h"
 #include <iostream>
+#include "TileMapComponent.h"
 RayComponent::RayComponent(Actor * owner, RAY type, int updateOrder)
 	:Component(owner, updateOrder)
 {
@@ -63,25 +64,25 @@ void RayComponent::update(float deltaTime)
 
 bool RayComponent::canPointBeTravelled(int x, int y)
 {
-	int r = floor((x + World::camera.x) / 16);
-	int c = floor((y + World::camera.y) / 16);
+	int r = floor((x + World::camera.x) / TileMapComponent::tileWidth);
+	int c = floor((y + World::camera.y) / TileMapComponent::tileHeight);
 	
 	if (r < 0)return true;
-	if (r > this->m_Owner->getGame()->getWorld()->getXTiles() - 1)return true;
+	if (r > TileMapComponent::xTiles - 1)return true;
 	if (c < 0)return true;
-	if (c > this->m_Owner->getGame()->getWorld()->getYTiles() - 1)return true;
+	if (c > TileMapComponent::yTiles - 1)return true;
 
-	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c))==nullptr)
+	if ((this->m_Owner->getGame()->getWorld()->onemap->getTile(r, c))==nullptr)
 	{
 		return true;
 	}
 
-	if (this->m_Owner->getGame()->getWorld()->getTile(r, c)->type==Tile::BACKGROUND)
+	if (this->m_Owner->getGame()->getWorld()->onemap->getTile(r, c)->type==Tile::BACKGROUND)
 	{
 		return true;
 	}
 
-	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c)->getTileID()) == -1)
+	if ((this->m_Owner->getGame()->getWorld()->onemap->getTile(r, c)->getTileID()) == -1)
 	{
 		return true;
 	}
