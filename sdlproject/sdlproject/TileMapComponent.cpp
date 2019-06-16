@@ -3,6 +3,8 @@
 #include "Tile.h"
 #include <fstream>
 #include <sstream>
+#include "tinyxml2.h"
+#include <map>
 
 const int TileMapComponent::tileWidth = 16;
 const int TileMapComponent::tileHeight = 16;
@@ -21,44 +23,79 @@ TileMapComponent::~TileMapComponent()
 void TileMapComponent::loadMap(const std::string& mapFile)
 {
 	setTexture(mWorld->getGame()->getTexture("Assets/map/tileset.png"));
-	std::ifstream file(mapFile.c_str());
+
+	std::map<std::string, std::string> mapData;
 	int xImgTiles = m_TextureWidth / tileWidth;
-	if (file.is_open())
+	//xml parsing
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile("Assets/map/map.tmx");
+	tinyxml2::XMLNode * pRoot = doc.FirstChild();
+	if (pRoot == nullptr)
 	{
-		std::string line;
-		std::stringstream ss;
-		int r = 0, c = 0;
-		while (std::getline(file, line))
+		std::cout << "XML_ERROR_FILE_READ_ERROR :" << tinyxml2::XML_ERROR_FILE_READ_ERROR << std::endl;
+	}
+	tinyxml2::XMLElement * pElement = pRoot->FirstChildElement("layer");
+	if (pElement != nullptr)
+	{
+		const char * layer = nullptr;
+		layer = pElement->Attribute("name");
+		if (layer == nullptr) std::cout << "XML_ERROR_PARSING_LAYER_NAME" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
+		std::string layerName = layer;
+		std::cout << layerName.c_str() << std::endl;
+
+		tinyxml2::XMLElement * dataTag;
+		dataTag = pElement->FirstChildElement("data");
+
+		if (dataTag != nullptr)
 		{
-			ss.str(line);
-			int i;
-			while (ss >> i)
+			tinyxml2::XMLElement * tile = dataTag->FirstChildElement("tile");
+			
+			int r = 0, c = 0;
+			std::stringstream ss;
+			int i = 0;
+			while (tile != nullptr)
 			{
-				//due to incorrect tile rendering order , passing r into column argument and vice versa.
-				Tile* tile;
-				if (i == 48 || i == 49 || i == 207 || i == 209 || i==228
-					|| i == 190 || i == 189 || i == 187 || i == 188 || i == 210
-					|| i == 230 || i == 227 || i == 138)
+				if (tile == nullptr)
 				{
-					tile = new Tile(Tile::BACKGROUND, i);
+					std::cout << "XML_ERROR_PARSING_ELEMENT_TILE" << tinyxml2::XML_ERROR_PARSING_ATTRIBUTE << std::endl;
 				}
 				else
 				{
-					tile = new Tile(Tile::SOLID, i);
+					if (c > 149)
+					{
+						c = 0;
+						r++;
+					}
+					
+					const char * tilegid = nullptr;
+					tilegid = tile->Attribute("gid");
+					if (tilegid != nullptr)
+					{
+						ss.str(tilegid);
+						ss >> i;
+						ss.clear();
+						i--;
+
+						Tile* tile = new Tile(Tile::SOLID, i);
+						tile->init(c, r, tileWidth, tileHeight);
+						tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
+						mWorld->addTile(c, r, tile);
+
+					}
+					
+
+					std::cout << "c :" << c << " r:" << r << std::endl;
+					c++;
 				}
-				
-				tile->init(c, r, tileWidth, tileHeight);
-				tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
-				mWorld->addTile(c, r, tile);
-				c++;
-				if (ss.peek() == ',')
-					ss.ignore();
+
+				tile = tile->NextSiblingElement("tile");
 			}
-			ss.clear();
-			r++;
-			c = 0;
+			
 		}
+		//pElement = pElement->NextSiblingElement("layer");
 	}
+	doc.Clear();
+
 }
 
 void TileMapComponent::update(float deltaTime)
@@ -73,26 +110,28 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 		{
 			for (int j = 0; j < mWorld->getXTiles(); j++)
 			{
-				if (mWorld->getTile(j, i)->getTileID() == -1)
-					continue;
-				SDL_Rect dstRect, srcRect;
-				dstRect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x - World::camera.x);
-				dstRect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y - World::camera.y);
-				dstRect.w = tileWidth;
-				dstRect.h = tileHeight;
+				if (mWorld->getTile(j, i))
+				{
+					SDL_Rect dstRect, srcRect;
+					dstRect.x = static_cast<int>(mWorld->getTile(j, i)->getPosition().x - World::camera.x);
+					dstRect.y = static_cast<int>(mWorld->getTile(j, i)->getPosition().y - World::camera.y);
+					dstRect.w = tileWidth;
+					dstRect.h = tileHeight;
 
-				srcRect.x = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().x);
-				srcRect.y = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().y);
-				srcRect.w = tileWidth;
-				srcRect.h = tileHeight;
+					srcRect.x = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().x);
+					srcRect.y = static_cast<int>(mWorld->getTile(j, i)->getImgSrc().y);
+					srcRect.w = tileWidth;
+					srcRect.h = tileHeight;
 
-				SDL_RenderCopyEx(renderer,
-					this->m_Texture,
-					&srcRect,
-					&dstRect,
-					0,
-					nullptr,
-					SDL_FLIP_NONE);
+					SDL_RenderCopyEx(renderer,
+						this->m_Texture,
+						&srcRect,
+						&dstRect,
+						0,
+						nullptr,
+						SDL_FLIP_NONE);
+				}
+				
 
 			}
 		}
