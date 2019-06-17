@@ -64,28 +64,17 @@ void RayComponent::update(float deltaTime)
 
 bool RayComponent::canPointBeTravelled(int x, int y)
 {
-	int r = floor((x + World::camera.x) / TileMapComponent::tileWidth);
-	int c = floor((y + World::camera.y) / TileMapComponent::tileHeight);
+	int r = floor((x + World::camera.x) / World::tileWidth);
+	int c = floor((y + World::camera.y) / World::tileHeight);
 	
 	if (r < 0)return true;
-	if (r > TileMapComponent::xTiles - 1)return true;
+	if (r > World::xTiles - 1)return true;
 	if (c < 0)return true;
-	if (c > TileMapComponent::yTiles - 1)return true;
+	if (c > World::yTiles - 1)return true;
 
 	if ((this->m_Owner->getGame()->getWorld()->onemap->getTile(r, c))==nullptr)
 	{
 		return true;
 	}
-
-	if (this->m_Owner->getGame()->getWorld()->onemap->getTile(r, c)->type==Tile::BACKGROUND)
-	{
-		return true;
-	}
-
-	if ((this->m_Owner->getGame()->getWorld()->onemap->getTile(r, c)->getTileID()) == -1)
-	{
-		return true;
-	}
-	
 	return false;
 }

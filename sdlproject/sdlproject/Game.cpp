@@ -208,7 +208,7 @@ void Game::loadData()
 	bg->SetBGTextures(bgtexs);
 	bg->SetScrollSpeed(0.0f);
 	// Create the closer background
-	bg = new BGSpriteComponent(temp, 30);
+	/*bg = new BGSpriteComponent(temp, 30);
 	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
 	bgtexs = {
 		getTexture("Assets/middleground.png"),
@@ -216,7 +216,7 @@ void Game::loadData()
 	};
 	bg->SetBGTextures(bgtexs);
 	bg->SetScrollSpeed(0.0f);
-
+*/
 
 }
 

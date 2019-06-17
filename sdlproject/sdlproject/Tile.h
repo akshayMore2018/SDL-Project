@@ -5,11 +5,6 @@
 class Tile 
 {
 public:
-	enum LAYER
-	{
-		SOLID,
-		BACKGROUND
-	};
 
 	Tile(const short unsigned int type, int tileSetID);
 	void init(int x, int y, int w, int h);

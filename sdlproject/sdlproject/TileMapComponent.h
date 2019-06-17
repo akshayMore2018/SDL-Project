@@ -7,21 +7,13 @@ class TileMapComponent : public SpriteComponent
 public:
 	TileMapComponent(class World* actor, int draworder = 50);
 	~TileMapComponent();
-	void loadMap(const std::string& mapFile);
 
 	void update(float deltaTime);
 	void draw(SDL_Renderer* renderer);
-	static  int tileWidth;
-	static  int tileHeight;
-	static  int xTiles;
-	static  int yTiles;
-	static  int mapWidth;
-	static  int mapHeight;
-
 	const class Tile* getTile(int x, int y)const;
-
+	void setTiles(std::vector<std::vector<class Tile*>>& tiles);
 
 private:
-	class World* mWorld;
+	SDL_Rect dstRect, srcRect;
 	std::vector<std::vector<class Tile*>> gridMap;
 };
