@@ -2,15 +2,14 @@
 #include <iostream>
 #include "Math.h"
 #include "SDL.h"
-class Tile 
+#include "Actor.h"
+class Tile : public Actor 
 {
 public:
 
-	Tile(const short unsigned int type, int tileSetID);
-	void init(int x, int y, int w, int h);
-	void updateTile(float deltaTime);
+	Tile(const std::string& ID, class Game* game);
+	void init(const short unsigned int type, int tileSetID,int x, int y, int w, int h);
 
-	void setImgSrcCoord(int x, int y);
 	const Vector2& getPosition()const { return position; }
 	const Vector2& getImgSrc()const { return imgSrc; }
 	const int getWidth()const { return width; }

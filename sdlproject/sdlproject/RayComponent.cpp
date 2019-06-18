@@ -72,7 +72,7 @@ bool RayComponent::canPointBeTravelled(int x, int y)
 	if (c < 0)return true;
 	if (c > World::yTiles - 1)return true;
 
-	if ((this->m_Owner->getGame()->getWorld()->onemap->getTile(r, c))==nullptr)
+	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c))==nullptr)
 	{
 		return true;
 	}

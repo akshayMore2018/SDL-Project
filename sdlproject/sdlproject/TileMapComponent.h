@@ -5,7 +5,7 @@
 class TileMapComponent : public SpriteComponent
 {
 public:
-	TileMapComponent(class World* actor, int draworder = 50);
+	TileMapComponent(class Tile* actor, int draworder = 50);
 	~TileMapComponent();
 
 	void update(float deltaTime);
@@ -15,5 +15,5 @@ public:
 
 private:
 	SDL_Rect dstRect, srcRect;
-	std::vector<std::vector<class Tile*>> gridMap;
+	class Tile* m_Owner;
 };

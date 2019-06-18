@@ -5,8 +5,8 @@
 #include <sstream>
 #include "tinyxml2.h"
 
-TileMapComponent::TileMapComponent(World * actor, int draworder)
-	:SpriteComponent(actor,draworder)
+TileMapComponent::TileMapComponent(Tile * actor, int draworder)
+	:SpriteComponent(actor,draworder), m_Owner(actor)
 {
 	dstRect.w = World::tileWidth;
 	dstRect.h = World::tileHeight;
@@ -16,14 +16,14 @@ TileMapComponent::TileMapComponent(World * actor, int draworder)
 
 TileMapComponent::~TileMapComponent()
 {
-	for (int i = 0; i < World::yTiles; i++)
+	/*for (int i = 0; i < World::yTiles; i++)
 	{
 		for (int j = 0; j < World::xTiles; j++)
 		{
 			delete gridMap[j][i];
 		}
 	}
-	gridMap.clear();
+	gridMap.clear();*/
 }
 
 void TileMapComponent::update(float deltaTime)
@@ -34,39 +34,20 @@ void TileMapComponent::draw(SDL_Renderer * renderer)
 {
 	if (m_Texture)
 	{
-		for (int i = 0; i < World::yTiles; i++)
 		{
-			for (int j = 0; j < World::xTiles; j++)
-			{
-				if (gridMap[j][i])
-				{
-					dstRect.x = static_cast<int>(gridMap[j][i]->getPosition().x - World::camera.x);
-					dstRect.y = static_cast<int>(gridMap[j][i]->getPosition().y - World::camera.y);
+			dstRect.x = static_cast<int>(m_Owner->getPosition().x - World::camera.x);
+			dstRect.y = static_cast<int>(m_Owner->getPosition().y - World::camera.y);
 				
-					srcRect.x = static_cast<int>(gridMap[j][i]->getImgSrc().x);
-					srcRect.y = static_cast<int>(gridMap[j][i]->getImgSrc().y);
+			srcRect.x = static_cast<int>(m_Owner->getImgSrc().x);
+			srcRect.y = static_cast<int>(m_Owner->getImgSrc().y);
 					
-					SDL_RenderCopyEx(renderer,
-						this->m_Texture,
-						&srcRect,
-						&dstRect,
-						0,
-						nullptr,
-						SDL_FLIP_NONE);
-				}
-				
-
-			}
-		}
+			SDL_RenderCopyEx(renderer,
+				this->m_Texture,
+				&srcRect,
+				&dstRect,
+				0,
+				nullptr,
+				SDL_FLIP_NONE);
+		}	
 	}
-}
-
-const Tile * TileMapComponent::getTile(int x, int y) const
-{
-	return gridMap[x][y];
-}
-
-void TileMapComponent::setTiles(std::vector<std::vector<class Tile*>>& tiles)
-{
-	gridMap = tiles;
 }

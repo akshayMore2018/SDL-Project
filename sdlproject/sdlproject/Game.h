@@ -27,7 +27,7 @@ public:
 	SDL_Texture* getTexture(const std::string& filename);
 	std::vector<class Actor*>& getActors() { return m_Actors; }
 
-	const class World* getWorld() const { return mWorld; }
+	class World* getWorld() const { return mWorld; }
 
 private:
 	void loadData();

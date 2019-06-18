@@ -19,8 +19,9 @@ public:
 	void init();
 	void setPlayer(Actor* player);
 	static SDL_Rect camera;
-	class TileMapComponent* onemap;
 	void loadMap(const std::string& file);
+
+	const class Tile* getTile(int x, int y);
 
 	static  int tileWidth;
 	static  int tileHeight;

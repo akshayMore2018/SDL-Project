@@ -40,18 +40,6 @@ void World::updateActor(float deltaTime)
 void World::init()
 {
 	loadMap("Assets/map/map.tmx");
-	onemap = new TileMapComponent(this);
-	onemap->setTexture(getGame()->getTexture("Assets/map/tileset.png"));
-	onemap->setTiles(map["background"]);
-
-	/*onemap = new TileMapComponent(this,102);
-	onemap->setTexture(getGame()->getTexture("Assets/map/tileset.png"));
-	onemap->setTiles(map["foreground"]);
-*/
-	onemap = new TileMapComponent(this);
-	onemap->setTexture(getGame()->getTexture("Assets/map/tileset.png"));
-	onemap->setTiles(map["solid"]);
-
 }
 void World::setPlayer(Actor * player)
 {
@@ -139,8 +127,6 @@ void World::loadMap(const std::string& file)
 		std::cout << "mapHeight :" << mapHeight << std::endl;
 		ss.clear();
 		i = 0;
-
-		int xImgTiles = 864 / tileWidth;
 		tinyxml2::XMLElement * layerElement = mapRoot->FirstChildElement("layer");
 		while (layerElement != nullptr)
 		{
@@ -185,39 +171,42 @@ void World::loadMap(const std::string& file)
 							ss >> i;
 							ss.clear();
 							i--;
-
-							Tile* tile;
-
+							short unsigned int layerType = 0;
 							if (layerName == "foreground")
 							{
-								tile = new Tile(FOREGROUND, i);
+								layerType = FOREGROUND;
 							}
 							else if("middleground")
 							{
-								tile = new Tile(MIDDLEGROUND, i);
+								layerType = MIDDLEGROUND;
 							}
 							else if ("background")
 							{
-								tile = new Tile(BACKGROUND, i);
+								layerType = BACKGROUND;
 							}
 							else
 							{
-								tile = new Tile(SOLID, i);
+								layerType = SOLID;
 							}
-							tile->init(c, r, tileWidth, tileHeight);
-							tile->setImgSrcCoord(i % xImgTiles, i / xImgTiles);
+							Tile* tile = new Tile("tile", getGame());
+							tile->init(layerType,i,c, r, tileWidth, tileHeight);
 							map[layerName][c][r] = tile;
 						}
 						c++;
 					}
-
 					tile = tile->NextSiblingElement("tile");
 				}
-
 			}
 			layerElement = layerElement->NextSiblingElement("layer");
 		}
 	}
 	doc.Clear();
 }
+
+const Tile * World::getTile(int x, int y)
+{
+	return map["solid"][x][y];
+}
+
+
 
