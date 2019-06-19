@@ -5,7 +5,7 @@
 class BGSpriteComponent : public SpriteComponent
 {
 public:
-	BGSpriteComponent(class Actor* owner, int drawOrder = 10);
+	BGSpriteComponent(class Player* owner, int drawOrder = 10);
 
 	void update(float deltaTime);
 	void draw(SDL_Renderer* renderer);
@@ -25,5 +25,6 @@ private:
 	std::vector<BGTexture> m_BGTextures;
 	Vector2 m_ScreenSize;
 	float m_ScrollSpeed;
-
+	float speed;
+	class Player* mPlayer;
 };

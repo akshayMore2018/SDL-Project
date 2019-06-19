@@ -4,6 +4,7 @@
 #include "TileMapComponent.h"
 #include "tinyxml2.h"
 #include <sstream>
+#include "BGSpriteComponent.h"
 
 SDL_Rect World::camera = { 0,0,1024,768 };
 int World::tileWidth = 0;

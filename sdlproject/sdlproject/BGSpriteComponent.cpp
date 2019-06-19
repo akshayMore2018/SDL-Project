@@ -1,9 +1,10 @@
 #include "BGSpriteComponent.h"
-#include "Actor.h"
-
-BGSpriteComponent::BGSpriteComponent(Actor * owner, int drawOrder)
-	:SpriteComponent(owner,drawOrder),
-	m_ScrollSpeed(0.0f)
+#include "Player.h"
+#include <iostream>
+#include "World.h"
+BGSpriteComponent::BGSpriteComponent(Player * owner, int drawOrder)
+	:SpriteComponent(owner, drawOrder),
+	m_ScrollSpeed(0.0f), mPlayer(owner),speed(0)
 {
 
 }
@@ -13,13 +14,29 @@ void BGSpriteComponent::update(float deltaTime)
 	SpriteComponent::update(deltaTime);
 	for (auto& bg : this->m_BGTextures)
 	{
-		
-		bg.m_Offset.x += m_ScrollSpeed * deltaTime;
-		
 		if (bg.m_Offset.x < -m_ScreenSize.x)
 		{
-			bg.m_Offset.x = (m_BGTextures.size() - 1) * m_ScreenSize.x - 1;
+			bg.m_Offset.x = (m_BGTextures.size() - 1) * m_ScreenSize.x - 2;
 		}
+		else if (bg.m_Offset.x > m_ScreenSize.x)
+		{
+			bg.m_Offset.x = (m_BGTextures.size() - 1) * m_ScreenSize.x - 2;
+			bg.m_Offset.x = -bg.m_Offset.x;
+		}
+
+		if ((World::camera.x == 0) || (World::camera.x == World::mapWidth - World::camera.w))
+		{
+			speed = 0;
+		}
+		else
+		{
+			speed = 0;
+			if (abs(mPlayer->xsp) != 0)
+			{
+				speed = m_ScrollSpeed * -mPlayer->xsp*0.2f;
+			}
+		}
+		bg.m_Offset.x += speed * deltaTime;
 	}
 }
 
@@ -31,9 +48,9 @@ void BGSpriteComponent::draw(SDL_Renderer * renderer)
 		// Assume screen size dimensions
 		r.w = static_cast<int>(m_ScreenSize.x);
 		r.h = static_cast<int>(m_ScreenSize.y);
-		// Center the rectangle around the position of the owner
-		r.x = static_cast<int>(this->m_Owner->getPosition().x - r.w / 2 + bg.m_Offset.x);
-		r.y = static_cast<int>(this->m_Owner->getPosition().y - r.h / 2 + bg.m_Offset.y);
+		
+		r.x = static_cast<int>(bg.m_Offset.x);
+		r.y = static_cast<int>(bg.m_Offset.y);
 
 		// Draw this background
 		SDL_RenderCopy(renderer,

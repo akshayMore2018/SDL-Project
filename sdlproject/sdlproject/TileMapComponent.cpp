@@ -16,14 +16,7 @@ TileMapComponent::TileMapComponent(Tile * actor, int draworder)
 
 TileMapComponent::~TileMapComponent()
 {
-	/*for (int i = 0; i < World::yTiles; i++)
-	{
-		for (int j = 0; j < World::xTiles; j++)
-		{
-			delete gridMap[j][i];
-		}
-	}
-	gridMap.clear();*/
+
 }
 
 void TileMapComponent::update(float deltaTime)

@@ -171,8 +171,10 @@ void Player::actorInput(const uint8_t * keystate)
 			{
 				this->sprite->setAnimation("run", -1);
 			}
+
+			movingDirection = gsp / abs(gsp);
 		}
-		movingDirection = gsp / abs(gsp);
+		
 	}
 
 	if (keystate[SDL_SCANCODE_SPACE])

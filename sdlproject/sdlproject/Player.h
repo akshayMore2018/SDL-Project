@@ -4,6 +4,7 @@
 class Player :public Actor
 {
 public:
+	friend class BGSpriteComponent;
 	Player(const std::string& ID,class Game* game);
 	
 	void init();
@@ -16,7 +17,6 @@ public:
 
 private:
 	class AnimSpriteComponent* sprite;
-	
 	float xsp;
 	float ysp;
 	float gsp;

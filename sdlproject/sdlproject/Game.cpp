@@ -24,7 +24,7 @@ bool Game::initialize()
 	if (SDL_Init(SDL_INIT_VIDEO)==0)
 	{
 		this->m_Window = SDL_CreateWindow(
-			"StarHopper",
+			"Durandal",
 			100,
 			100,
 			1024,
@@ -189,34 +189,40 @@ void Game::loadData()
 {
 	Player* player = new Player("Player",this);
 	player->init();
+
+	// Create the "far back" background
+	BGSpriteComponent* bg = new BGSpriteComponent(player, 10);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	std::vector<SDL_Texture*> bgtexs = {
+		getTexture("Assets/background/background.png"),
+		getTexture("Assets/background/background.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(25.0f);
+	// Create the closer background
+	bg = new BGSpriteComponent(player, 30);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	bgtexs = {
+		getTexture("Assets/background/middleground.png"),
+		getTexture("Assets/background/middleground.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(50.0f);
+
+	bg = new BGSpriteComponent(player, 111);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	bgtexs = {
+		getTexture("Assets/background/foreground.png"),
+		getTexture("Assets/background/foreground.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(200.0f);
+
 	
 	mWorld = new World("map",this);
 	mWorld->setPosition(Vector2(0, 0));
 	mWorld->setPlayer(player);
 	mWorld->init();
-
-
-	Actor* temp = new Actor("bg",this);
-	temp->setPosition(Vector2(512.0f, 384.0f));
-	// Create the "far back" background
-	BGSpriteComponent* bg = new BGSpriteComponent(temp,10);
-	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
-	std::vector<SDL_Texture*> bgtexs = {
-		getTexture("Assets/background.png"),
-		getTexture("Assets/background.png")
-	};
-	bg->SetBGTextures(bgtexs);
-	bg->SetScrollSpeed(0.0f);
-	// Create the closer background
-	/*bg = new BGSpriteComponent(temp, 30);
-	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
-	bgtexs = {
-		getTexture("Assets/middleground.png"),
-		getTexture("Assets/middleground.png")
-	};
-	bg->SetBGTextures(bgtexs);
-	bg->SetScrollSpeed(0.0f);
-*/
 
 }
 
