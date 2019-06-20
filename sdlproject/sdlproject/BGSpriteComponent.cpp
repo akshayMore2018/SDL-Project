@@ -30,11 +30,8 @@ void BGSpriteComponent::update(float deltaTime)
 		}
 		else
 		{
-			speed = 0;
-			if (abs(mPlayer->xsp) != 0)
-			{
-				speed = m_ScrollSpeed * -mPlayer->xsp*0.2f;
-			}
+
+			speed = m_ScrollSpeed * -mPlayer->xsp*0.2f;
 		}
 		bg.m_Offset.x += speed * deltaTime;
 	}
