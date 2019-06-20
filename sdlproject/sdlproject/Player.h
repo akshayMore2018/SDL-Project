@@ -5,7 +5,7 @@ class Player :public Actor
 {
 public:
 	friend class BGSpriteComponent;
-	Player(const std::string& ID,class Game* game);
+	Player(const std::string& ID,class View* view);
 	
 	void init();
 

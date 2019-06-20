@@ -1,6 +1,6 @@
 #include "RayComponent.h"
 #include "Actor.h"
-#include "Game.h"
+#include "View.h"
 #include "World.h"
 #include "Tile.h"
 #include <iostream>
@@ -8,13 +8,13 @@
 RayComponent::RayComponent(Actor * owner, RAY type, int updateOrder)
 	:Component(owner, updateOrder)
 {
-	this->m_Owner->getGame()->addRay(this);
+	this->m_Owner->getView()->addRay(this);
 	this->rayType = type;
 }
 
 RayComponent::~RayComponent()
 {
-	this->m_Owner->getGame()->removeRay(this);
+	this->m_Owner->getView()->removeRay(this);
 }
 
 void RayComponent::draw(SDL_Renderer * renderer)
@@ -72,7 +72,7 @@ bool RayComponent::canPointBeTravelled(int x, int y)
 	if (c < 0)return true;
 	if (c > World::yTiles - 1)return true;
 
-	if ((this->m_Owner->getGame()->getWorld()->getTile(r, c))==nullptr)
+	if ((this->m_Owner->getView()->getWorld()->getTile(r, c))==nullptr)
 	{
 		return true;
 	}

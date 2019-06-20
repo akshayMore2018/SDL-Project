@@ -1,6 +1,6 @@
 #include "SpriteComponent.h"
 #include "Actor.h"
-#include "Game.h"
+#include "View.h"
 #include <iostream>
 #include "World.h"
 
@@ -11,12 +11,12 @@ SpriteComponent::SpriteComponent(Actor * owner, int drawOrder)
 	m_TextureWidth(0),
 	m_TextureHeight(0)
 {
-	m_Owner->getGame()->addSprite(this);
+	m_Owner->getView()->addSprite(this);
 }
 
 SpriteComponent::~SpriteComponent()
 {
-	this->m_Owner->getGame()->removeSprite(this);
+	this->m_Owner->getView()->removeSprite(this);
 }
 
 void SpriteComponent::draw(SDL_Renderer * renderer)

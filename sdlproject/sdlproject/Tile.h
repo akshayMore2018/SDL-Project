@@ -7,7 +7,7 @@ class Tile : public Actor
 {
 public:
 
-	Tile(const std::string& ID, class Game* game);
+	Tile(const std::string& ID, class View* view);
 	void init(const short unsigned int type, int tileSetID,int x, int y, int w, int h);
 
 	const Vector2& getPosition()const { return position; }

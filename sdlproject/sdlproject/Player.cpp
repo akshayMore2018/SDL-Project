@@ -1,13 +1,13 @@
 #include "Player.h"
 #include <iostream>
-#include "Game.h"
+#include "View.h"
 #include "AnimSpriteComponent.h"
 #include "CollisionComponent.h"
 #include "Tile.h" 
 #include "RayComponent.h"
 #include "World.h"
-Player::Player(const std::string& ID,Game * game)
-	:Actor(ID,game),
+Player::Player(const std::string& ID, View* view)
+	:Actor(ID,view),
 	xsp(0.0f),ysp(0.0f),gsp(0.0f),angle(0),
 	acc(0.046875),dec(0.5),frc(acc),top(6),
 	air(0.09375), jmp(6.5), knxjmp(6), grv(0.21875),

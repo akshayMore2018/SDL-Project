@@ -1,6 +1,6 @@
 #include "AnimSpriteComponent.h"
 #include "Actor.h"
-#include "Game.h"
+#include "View.h"
 #include "World.h"
 
 AnimSpriteComponent::AnimSpriteComponent(Actor * owner, int draworder)
@@ -78,7 +78,7 @@ void AnimSpriteComponent::draw(SDL_Renderer * renderer)
 void AnimSpriteComponent::setAnimation(const std::string & ID, int loop)
 {
 	AnimationData* data = this->animDataSet[ID];
-	setTexture(this->m_Owner->getGame()->getTexture(data->spritefile));
+	setTexture(this->m_Owner->getView()->getTexture(data->spritefile));
 	this->mTotalFrames = data->frameCount;
 	this->mFrameRate = data->frameRate;
 	this->setTextureRect(data->x, data->y, data->frameWidth, data->frameHeight);

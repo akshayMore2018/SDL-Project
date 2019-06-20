@@ -1,9 +1,10 @@
 #include "Tile.h"
 #include "TileMapComponent.h"
 #include "World.h"
+#include "View.h"
 
-Tile::Tile(const std::string & ID, Game * game)
-:Actor(ID,game)
+Tile::Tile(const std::string & ID, View* view)
+:Actor(ID,view)
 {
 
 }
@@ -33,7 +34,7 @@ void Tile::init(const short unsigned int type, int tileSetID,int x, int y , int 
 	}
 
 	TileMapComponent* comp = new TileMapComponent(this,drawOrder);
-	comp->setTexture(getGame()->getTexture("Assets/map/tileset.png"));
+	comp->setTexture(getView()->getTexture("Assets/map/tileset.png"));
 	int xTileImages = comp->getTextureWidth() / World::tileWidth;
 	this->imgSrc.x = (ID % xTileImages) * width;
 	this->imgSrc.y = (ID / xTileImages) * height;

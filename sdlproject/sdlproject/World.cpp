@@ -5,6 +5,7 @@
 #include "tinyxml2.h"
 #include <sstream>
 #include "BGSpriteComponent.h"
+#include "View.h"
 
 SDL_Rect World::camera = { 0,0,1024,768 };
 int World::tileWidth = 0;
@@ -15,8 +16,8 @@ int World::mapWidth = 0;
 int World::mapHeight = 0;
 
 
-World::World(const std::string& ID, class Game* game):
-Actor(ID,game)
+World::World(const std::string& ID, class View* view):
+Actor(ID,view)
 {
 
 }
@@ -189,7 +190,7 @@ void World::loadMap(const std::string& file)
 							{
 								layerType = SOLID;
 							}
-							Tile* tile = new Tile("tile", getGame());
+							Tile* tile = new Tile("tile", getView());
 							tile->init(layerType,i,c, r, tileWidth, tileHeight);
 							map[layerName][c][r] = tile;
 						}

@@ -13,7 +13,7 @@ public:
 		FOREGROUND,
 		SOLID
 	};
-	World(const std::string& ID, class Game* game);
+	World(const std::string& ID, class View* view);
 	~World();
 	void updateActor(float deltaTime);
 	void init();

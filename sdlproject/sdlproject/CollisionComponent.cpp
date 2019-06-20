@@ -1,17 +1,17 @@
 #include "CollisionComponent.h"
 #include "Actor.h"
-#include "Game.h"
+#include "View.h"
 #include "World.h"
 #include <iostream>
 CollisionComponent::CollisionComponent(Actor * owner, int updateOrder)
 :Component(owner,updateOrder), collisionRect{0,0,0,0},left(0),right(0),top(0),bottom(0)
 {
-	this->m_Owner->getGame()->addCollider(this);
+	this->m_Owner->getView()->addCollider(this);
 }
 
 CollisionComponent::~CollisionComponent()
 {
-	this->m_Owner->getGame()->removeCollider(this);
+	this->m_Owner->getView()->removeCollider(this);
 }
 
 void CollisionComponent::draw(SDL_Renderer * renderer)
