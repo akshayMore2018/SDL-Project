@@ -6,7 +6,7 @@
 #include "Tile.h" 
 #include "RayComponent.h"
 #include "World.h"
-Player::Player(const std::string& ID, View* view)
+Player::Player(const std::string& ID, GameView* view)
 	:Actor(ID,view),
 	xsp(0.0f),ysp(0.0f),gsp(0.0f),angle(0),
 	acc(0.046875),dec(0.5),frc(acc),top(6),

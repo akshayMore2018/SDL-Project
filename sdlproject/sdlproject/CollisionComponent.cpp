@@ -1,6 +1,6 @@
 #include "CollisionComponent.h"
 #include "Actor.h"
-#include "View.h"
+#include "GameView.h"
 #include "World.h"
 #include <iostream>
 CollisionComponent::CollisionComponent(Actor * owner, int updateOrder)

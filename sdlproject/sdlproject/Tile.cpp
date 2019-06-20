@@ -1,9 +1,9 @@
 #include "Tile.h"
 #include "TileMapComponent.h"
 #include "World.h"
-#include "View.h"
+#include "GameView.h"
 
-Tile::Tile(const std::string & ID, View* view)
+Tile::Tile(const std::string & ID, GameView* view)
 :Actor(ID,view)
 {
 

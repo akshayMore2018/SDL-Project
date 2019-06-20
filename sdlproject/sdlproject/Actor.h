@@ -13,7 +13,7 @@ public:
 		EDead
 	};
 
-	Actor(const std::string& ID,class View* view);
+	Actor(const std::string& ID,class GameView* view);
 	virtual ~Actor();
 
 	void update(float deltaTime);
@@ -38,7 +38,7 @@ public:
 	const Vector2& getPosition()const;
 	float getScale()const;
 	float getRotation()const;
-	class View* getView();
+	class GameView* getView();
 	const std::string& getID()const { return ID; }
 	const float getLeft() const { return left; }
 	const float getRight() const { return right; }
@@ -59,7 +59,7 @@ private:
 	float m_Scale;
 	float m_Rotation;
 	std::vector<class Component*> m_Components;
-	class View* m_View;
+	class GameView* m_View;
 	float left, right, top, bottom;
 	
 };
@@ -84,7 +84,7 @@ inline float Actor::getRotation() const
 }
 
 
-inline View* Actor::getView()
+inline GameView* Actor::getView()
 {
 	return this->m_View;
 }

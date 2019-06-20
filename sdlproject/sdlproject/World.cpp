@@ -5,7 +5,7 @@
 #include "tinyxml2.h"
 #include <sstream>
 #include "BGSpriteComponent.h"
-#include "View.h"
+#include "GameView.h"
 
 SDL_Rect World::camera = { 0,0,1024,768 };
 int World::tileWidth = 0;
@@ -16,7 +16,7 @@ int World::mapWidth = 0;
 int World::mapHeight = 0;
 
 
-World::World(const std::string& ID, class View* view):
+World::World(const std::string& ID, class GameView* view):
 Actor(ID,view)
 {
 

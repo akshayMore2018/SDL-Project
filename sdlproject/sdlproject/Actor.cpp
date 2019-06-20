@@ -1,9 +1,9 @@
 #include "Actor.h"
-#include "View.h"
+#include "GameView.h"
 #include "Component.h"
 #include "CollisionComponent.h"
 #include <iostream>
-Actor::Actor(const std::string& ID, class View* view)
+Actor::Actor(const std::string& ID, class GameView* view)
 	:ID(ID),m_State(EActive),m_Position(Vector2(0,0)),m_Scale(1.0f),m_Rotation(0.0f)
 	,m_View(view), flipStateX(SDL_RendererFlip::SDL_FLIP_NONE)
 {

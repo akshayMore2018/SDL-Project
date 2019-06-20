@@ -1,6 +1,6 @@
 #include "AnimSpriteComponent.h"
 #include "Actor.h"
-#include "View.h"
+#include "GameView.h"
 #include "World.h"
 
 AnimSpriteComponent::AnimSpriteComponent(Actor * owner, int draworder)

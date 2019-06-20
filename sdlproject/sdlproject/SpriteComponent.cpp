@@ -1,6 +1,6 @@
 #include "SpriteComponent.h"
 #include "Actor.h"
-#include "View.h"
+#include "GameView.h"
 #include <iostream>
 #include "World.h"
 

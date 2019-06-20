@@ -2,7 +2,7 @@
 #include "Actor.h"
 #include "SDL_image.h"
 #include <iostream>
-#include "View.h"
+#include "GameView.h"
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
 }
@@ -72,7 +72,7 @@ void Game::stop()
 
 void Game::loadData()
 {
-	currentView = new View(this);
+	currentView = new GameView(this);
 	currentView->loadData();
 }
 
