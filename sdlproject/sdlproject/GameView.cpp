@@ -4,10 +4,82 @@
 #include "SDL_image.h"
 #include "Player.h"
 #include "World.h"
+#include <iostream>
+#include "ScreenLoading.h"
+
 
 GameView::GameView(Game * game)
-	:View(game)
+	:View(game), gameLoaded(false)
 {
+	std::cout << "Loading textures......" << std::endl;
+	getTexture("Assets/background/background.png");
+	getTexture("Assets/background/middleground.png");
+	getTexture("Assets/background/foreground.png");
+	getTexture("Assets/playerAnimSheets/run0.png");
+	getTexture("Assets/playerAnimSheets/jump.png");
+	getTexture("Assets/playerAnimSheets/fall.png");
+	getTexture("Assets/playerAnimSheets/idle0.png");
+	getTexture("Assets/map/tileset.png");
+}
+
+void GameView::init()
+{
+	std::cout << "Thread running.." << std::endl;
+	gameLoaded = false;
+	Player* player = new Player("Player", this);
+	player->init();
+	// Create the "far back" background
+	BGSpriteComponent* bg = new BGSpriteComponent(player, 10);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	std::vector<SDL_Texture*> bgtexs = {
+		getTexture("Assets/background/background.png"),
+		getTexture("Assets/background/background.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(25.0f);
+	// Create the closer background
+	bg = new BGSpriteComponent(player, 30);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	bgtexs = {
+		getTexture("Assets/background/middleground.png"),
+		getTexture("Assets/background/middleground.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(50.0f);
+
+	bg = new BGSpriteComponent(player, 111);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	bgtexs = {
+		getTexture("Assets/background/foreground.png"),
+		getTexture("Assets/background/foreground.png")
+	};
+	bg->SetBGTextures(bgtexs);
+	bg->SetScrollSpeed(200.0f);
+	mWorld = new World("map", this);
+	mWorld->setPosition(Vector2(0, 0));
+	mWorld->setPlayer(player);
+	mWorld->init();
+	gameLoaded = true;
+}
+
+void GameView::enter()
+{
+	//setScreen(loadingScreen);
+	setScreen(new ScreenLoading(Screen::LOAD, this));
+}
+
+void GameView::exit()
+{
+	while (!this->m_Actors.empty())
+	{
+		delete this->m_Actors.back();
+	}
+
+	for (auto i : this->m_Textures)
+	{
+		SDL_DestroyTexture(i.second);
+	}
+	this->m_Textures.clear();
 }
 
 void GameView::addSprite(SpriteComponent * sprite)
@@ -82,100 +154,19 @@ void GameView::removeActor(Actor * actor)
 	}
 }
 
-SDL_Texture * GameView::getTexture(const std::string & filename)
-{
-	SDL_Texture* texture = nullptr;
-	auto iter = this->m_Textures.find(filename);
-
-	if (iter != this->m_Textures.end())
-	{
-		texture = iter->second;
-	}
-	else
-	{
-		SDL_Surface* surf = IMG_Load(filename.c_str());
-
-		if (!surf)
-		{
-			SDL_Log("Failed to load texture file : %s", filename.c_str());
-			return nullptr;
-		}
-
-		texture = SDL_CreateTextureFromSurface(this->mGame->m_Renderer, surf);
-		SDL_FreeSurface(surf);
-
-		if (!texture)
-		{
-			SDL_Log("failed to convert surface to texture for %s", filename.c_str());
-			return nullptr;
-		}
-
-		this->m_Textures.emplace(filename.c_str(), texture);
-
-	}
-
-	return texture;
-}
-
-void GameView::loadData()
-{
-	Player* player = new Player("Player", this);
-	player->init();
-
-	// Create the "far back" background
-	BGSpriteComponent* bg = new BGSpriteComponent(player, 10);
-	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
-	std::vector<SDL_Texture*> bgtexs = {
-		getTexture("Assets/background/background.png"),
-		getTexture("Assets/background/background.png")
-	};
-	bg->SetBGTextures(bgtexs);
-	bg->SetScrollSpeed(25.0f);
-	// Create the closer background
-	bg = new BGSpriteComponent(player, 30);
-	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
-	bgtexs = {
-		getTexture("Assets/background/middleground.png"),
-		getTexture("Assets/background/middleground.png")
-	};
-	bg->SetBGTextures(bgtexs);
-	bg->SetScrollSpeed(50.0f);
-
-	bg = new BGSpriteComponent(player, 111);
-	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
-	bgtexs = {
-		getTexture("Assets/background/foreground.png"),
-		getTexture("Assets/background/foreground.png")
-	};
-	bg->SetBGTextures(bgtexs);
-	bg->SetScrollSpeed(200.0f);
 
 
-	mWorld = new World("map", this);
-	mWorld->setPosition(Vector2(0, 0));
-	mWorld->setPlayer(player);
-	mWorld->init();
-}
-
-void GameView::unloadData()
-{
-	while (!this->m_Actors.empty())
-	{
-		delete this->m_Actors.back();
-	}
-
-	for (auto i : this->m_Textures)
-	{
-		SDL_DestroyTexture(i.second);
-	}
-	this->m_Textures.clear();
-}
 
 void GameView::events()
 {
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 
-	//TODO: screen events
+	if (currentScreen != nullptr)
+	{
+		currentScreen->events();
+		return;
+	}
+
 
 	this->m_UpdatingActors = true;
 	for (auto actor : this->m_Actors)
@@ -187,7 +178,12 @@ void GameView::events()
 
 void GameView::update(float deltaTime)
 {
-	//TODO: screen update
+
+	if (currentScreen != nullptr)
+	{
+		currentScreen->update(deltaTime);
+		return;
+	}
 
 	this->m_UpdatingActors = true;
 	for (auto actor : this->m_Actors)
@@ -221,7 +217,12 @@ void GameView::update(float deltaTime)
 
 void GameView::render()
 {
-	//TODO:screen rendering 
+	if (currentScreen != nullptr)
+	{
+		currentScreen->render();
+		return;
+	}
+
 
 	for (auto sprite : m_Sprites)
 	{
@@ -238,3 +239,4 @@ void GameView::render()
 		ray->draw(this->mGame->m_Renderer);
 	}*/
 }
+

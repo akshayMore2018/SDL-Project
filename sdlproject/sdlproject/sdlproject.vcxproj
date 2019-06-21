@@ -133,8 +133,10 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameView.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuView.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RayComponent.cpp" />
+    <ClCompile Include="ScreenLoading.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMapComponent.cpp" />
@@ -151,8 +153,11 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameView.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="MenuView.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RayComponent.h" />
+    <ClInclude Include="Screen.h" />
+    <ClInclude Include="ScreenLoading.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMapComponent.h" />

@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "SDL_image.h"
 #include <iostream>
+#include "MenuView.h"
 #include "GameView.h"
 Game::Game():m_Window(nullptr),m_IsRunning(true)
 {
@@ -70,15 +71,44 @@ void Game::stop()
 	SDL_Quit();
 }
 
+void Game::changeView(const short unsigned int viewID)
+{
+	switch (viewID)
+	{
+	case MENU:
+		if (currentView)
+		{
+			currentView->exit();
+		}
+		currentView = new MenuView(this);
+		currentView->enter();
+		break;
+	case GAMEPLAY:
+		if (currentView)
+		{
+			currentView->exit();
+		}
+		currentView = new GameView(this);
+		currentView->enter();
+		break;
+	default:
+		stop();
+		break;
+	}
+
+}
+
+
+
 void Game::loadData()
 {
-	currentView = new GameView(this);
-	currentView->loadData();
+	changeView(MENU);
 }
 
 void Game::unloadData()
 {
-	currentView->unloadData();
+	if(currentView)
+	currentView->exit();
 }
 
 void Game::events()
@@ -94,7 +124,7 @@ void Game::events()
 			break;
 		}
 	}
-
+	if (currentView)
 	currentView->events();
 }
 
@@ -110,6 +140,7 @@ void Game::update()
 	}
 	mTicksCount = SDL_GetTicks();
 
+	if (currentView)
 	currentView->update(deltaTime);
 
 }
@@ -118,6 +149,8 @@ void Game::render()
 {
 	SDL_SetRenderDrawColor(this->m_Renderer,12, 32, 32, 255);
 	SDL_RenderClear(this->m_Renderer);
+
+	if (currentView)
 	currentView->render();
 	SDL_RenderPresent(this->m_Renderer);
 }

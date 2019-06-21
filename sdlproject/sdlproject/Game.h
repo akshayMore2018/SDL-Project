@@ -5,12 +5,20 @@
 class Game
 {
 public:
+
+	enum VIEW
+	{
+		MENU,
+		GAMEPLAY
+	};
 	Game();
 	~Game();
 	bool initialize();
 	void run();
 	void stop();
 	SDL_Renderer* m_Renderer;
+
+	void changeView(const short unsigned int viewID);
 
 private:
 	void loadData();

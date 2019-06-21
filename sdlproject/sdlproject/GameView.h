@@ -1,12 +1,17 @@
 #pragma once
 #include "View.h"
+
 class GameView : public View
 {
+
+	
 public:
+
 	GameView(class Game * game);
 
-	 void loadData();
-	 void unloadData();
+	 void init();
+	 void enter();
+	 void exit();
 	 void events();
 	 void update(float deltaTime);
 	 void render();
@@ -25,12 +30,11 @@ public:
 	void removeActor(class Actor* actor);
 
 	//getters
-    SDL_Texture* getTexture(const std::string& filename);
+   
 	std::vector<class Actor*>& getActors() { return m_Actors; }
 	class World* getWorld() const { return mWorld; }
-
+	bool gameLoaded;
 private:
-	std::unordered_map<std::string, SDL_Texture*> m_Textures;
 	std::vector<class SpriteComponent*> m_Sprites;
 	std::vector<class CollisionComponent*> m_Colliders;
 	std::vector<class RayComponent*> m_Rays;
@@ -38,4 +42,5 @@ private:
 	std::vector<Actor*> m_Actors;
 	bool m_UpdatingActors;
 	class World* mWorld;
+  
 };
