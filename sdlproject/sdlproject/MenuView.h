@@ -13,4 +13,5 @@ public:
 
 private:
 	SDL_Texture* bg;
+	SDL_Texture* mg;
 };

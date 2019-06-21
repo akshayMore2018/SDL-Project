@@ -8,7 +8,7 @@ class ScreenLoading :public Screen
 public:
 	friend int loadMap(void* data);
 	ScreenLoading(short unsigned int ID,class GameView* view);
-
+	~ScreenLoading();
 	void enter();
 
 	void events();
@@ -23,4 +23,6 @@ private:
 	SDL_Thread* threadID;
 	SDL_Texture* spinner;
 	float angle;
+	class Font* font;
+	Uint32 mTicksCount;
 };

@@ -1,11 +1,14 @@
 #include "Font.h"
 #include "Game.h"
-Font::Font()
+
+Font::Font(Game * game):mGame(game)
 {
 }
 
 Font::~Font()
 {
+	unLoad();
+	SDL_DestroyTexture(mTexture);
 }
 
 bool Font::load(const std::string & fileName)
@@ -26,20 +29,23 @@ bool Font::load(const std::string & fileName)
 		}
 
 		mFontData.emplace(size, font);
-		return true;
 	}
 
-	return false;
+	return true;
 }
 
 void Font::unLoad()
 {
-
+	for (auto font : mFontData)
+	{
+		TTF_CloseFont(font.second);
+	}
+	mFontData.clear();
 }
 
-SDL_Texture * Font::RenderText(const std::string & text, int pointSize)
+void Font::RenderText(const std::string & text, int pointSize)
 {
-	SDL_Texture* texture = nullptr;
+	mTexture = nullptr;
 	// Convert to SDL_Color
 	SDL_Color sdlColor;
 	sdlColor.r = 255;
@@ -56,9 +62,11 @@ SDL_Texture * Font::RenderText(const std::string & text, int pointSize)
 	
 		if (surf != nullptr)
 		{
-			texture = SDL_CreateTextureFromSurface(this->mGame->m_Renderer, surf);
+			mTexture = SDL_CreateTextureFromSurface(this->mGame->m_Renderer, surf);
 			SDL_FreeSurface(surf);
-
+			dstrect.x = 0;
+			dstrect.y = 0;
+			SDL_QueryTexture(mTexture, NULL, NULL, &dstrect.w, &dstrect.h);
 		}
 	
 	}
@@ -66,6 +74,10 @@ SDL_Texture * Font::RenderText(const std::string & text, int pointSize)
 	{
 		SDL_Log("Point size %d is unsupported", pointSize);
 	}
-	
-	return texture;
+}
+
+void Font::setFontPosition(float x, float y)
+{
+	dstrect.x = x;
+	dstrect.y = y;
 }

@@ -10,6 +10,7 @@ MenuView::MenuView(Game * game)
 void MenuView::enter()
 {
 	bg = getTexture("Assets/background/background.png");
+	mg = getTexture("Assets/background/middleground.png");
 }
 
 void MenuView::exit()
@@ -20,7 +21,7 @@ void MenuView::events()
 {
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 	
-	if (state[SDL_SCANCODE_SPACE])
+	if (state[SDL_SCANCODE_RETURN])
 	{
 		this->mGame->changeView(Game::GAMEPLAY);
 	}
@@ -34,4 +35,5 @@ void MenuView::render()
 {
 	SDL_Rect rect={ 0,0,1024,768 };
 	SDL_RenderCopy(this->mGame->m_Renderer,bg,nullptr,&rect);
+	SDL_RenderCopy(this->mGame->m_Renderer, mg, nullptr, &rect);
 }
