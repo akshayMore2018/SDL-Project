@@ -19,7 +19,7 @@ bool Game::initialize()
 	if (SDL_Init(SDL_INIT_VIDEO)==0)
 	{
 		this->m_Window = SDL_CreateWindow(
-			"Yggdrasil",
+			"Aranyak",
 			100,
 			100,
 			1024,

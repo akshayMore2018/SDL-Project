@@ -31,7 +31,7 @@ void ScreenLoading::enter()
 		std::cout << "SDL_CreateThread failed: " << SDL_GetError() << std::endl;
 	}
 	mTicksCount = SDL_GetTicks();
-	spinner = mView->getTexture("Assets/spinner.png");
+	spinner = mView->getTexture("Assets/gui/spinner.png");
 	font = new Font(mView->getGame());
 	font->load("Assets/fonts/m5x7/m5x7.ttf");
 	font->RenderText("Loading",52);

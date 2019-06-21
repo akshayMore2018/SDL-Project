@@ -14,4 +14,6 @@ public:
 private:
 	SDL_Texture* bg;
 	SDL_Texture* mg;
+	SDL_Texture* title;
+	class Font* font;
 };
