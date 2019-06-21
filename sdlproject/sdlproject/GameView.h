@@ -42,5 +42,4 @@ private:
 	std::vector<Actor*> m_Actors;
 	bool m_UpdatingActors;
 	class World* mWorld;
-  
 };

@@ -21,6 +21,6 @@ private:
 	class GameView* mView;
 	int threadReturnValue;
 	SDL_Thread* threadID;
-	SDL_Texture* bg;
+	SDL_Texture* spinner;
 	float angle;
 };

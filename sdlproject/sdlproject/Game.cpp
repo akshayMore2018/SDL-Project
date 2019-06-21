@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Actor.h"
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include <iostream>
 #include "MenuView.h"
 #include "GameView.h"
@@ -18,7 +19,7 @@ bool Game::initialize()
 	if (SDL_Init(SDL_INIT_VIDEO)==0)
 	{
 		this->m_Window = SDL_CreateWindow(
-			"Durandal",
+			"Yggdrasil",
 			100,
 			100,
 			1024,
@@ -44,6 +45,14 @@ bool Game::initialize()
 			SDL_Log("Failed to initialize SDL_image :%s", IMG_GetError());
 			system("pause");
 		}
+
+		if (TTF_Init()!=0)
+		{
+			SDL_Log("Failed to initialize SDL_ttf :%s", TTF_GetError());
+			system("pause");
+		}
+
+
 		this->loadData();
 		mTicksCount = SDL_GetTicks();
 		return true;
@@ -69,6 +78,7 @@ void Game::stop()
 	SDL_DestroyRenderer(this->m_Renderer);
 	SDL_DestroyWindow(this->m_Window);
 	SDL_Quit();
+	TTF_Quit();
 }
 
 void Game::changeView(const short unsigned int viewID)

@@ -24,7 +24,7 @@ void ScreenLoading::enter()
 		std::cout << "SDL_CreateThread failed: " << SDL_GetError() << std::endl;
 	}
 
-	bg = mView->getTexture("Assets/map/metaTile.png");
+	spinner = mView->getTexture("Assets/spinner.png");
 }
 
 void ScreenLoading::events()
@@ -42,9 +42,10 @@ void ScreenLoading::update(float deltaTime)
 
 void ScreenLoading::render()
 {
-	SDL_Rect rect = { 512,384,100,100 };
-	angle += 1;
-	SDL_RenderCopyEx(mView->getGame()->m_Renderer, bg, nullptr, &rect,angle,nullptr,SDL_FLIP_NONE);
+	SDL_Rect dstRect = { 512-30,384-30,60,60 };
+	SDL_Point center = {30,30};
+	angle += 6;
+	SDL_RenderCopyEx(mView->getGame()->m_Renderer, spinner, nullptr, &dstRect,angle,&center,SDL_FLIP_NONE);
 }
 
 void ScreenLoading::exit()
